@@ -6,6 +6,7 @@ import User from "@/models/User";
 import QuizAttempt from "@/models/QuizAttempt";
 import { nanoid } from "nanoid";
 import Organization from "@/models/Organization";
+import bcrypt from 'bcrypt';
 
 
 export const registerUser = async (data) => {
@@ -16,11 +17,12 @@ export const registerUser = async (data) => {
     return { status: false, message: "User already registered" };
   }
   else {
+    const hashedPassword = await bcrypt.hash(data.password, 12);
     let u = await User.create({
       email: data.email,
       name: data.name,
       phone: data.phone,
-      password: data.password,
+      password: hashedPassword,
       user_type: [{ type: data.regType, rights: data.regType === "Individual" ? "admin" : data.userType }],
     })
     // console.log("Created u", u);
@@ -92,7 +94,7 @@ export const storeQuizData = async (quizData) => {
     let quizId = nanoid();
 
     // Create a new Quiz document based on the passed quizData
-    const newQuiz = await Quiz.create({
+    let newQuiz = await Quiz.create({
       quizId: quizId,
       creater: quizData.creater,
       title: quizData.title,
@@ -137,6 +139,7 @@ export const updateQuiz = async (quizId, updatedQuizData) => {
     // Extract existing question IDs
     // const existingQuestionIds = existingQuiz.questions.map((q) => q._id.toString());
 
+    console.log(updatedQuizData);
     // Extract updated question IDs from client data
     const updatedQuestionIds = updatedQuizData.questions
       .filter((q) => q._id) // Only include questions with an ID
@@ -454,9 +457,8 @@ export const getQuizFeedback = async (quizId, userEmail) => {
     if (!quizAttempt) {
       throw new Error('Quiz attempt not found');
     }
-
     // Fetch the quiz questions
-    const quiz = await Quiz.findById(quizId).exec();
+    const quiz = await Quiz.findById(quizId).lean().exec();
     if (!quiz) {
       throw new Error('Quiz not found');
     }
@@ -464,14 +466,14 @@ export const getQuizFeedback = async (quizId, userEmail) => {
     // Prepare feedback data
     const feedback = quiz.questions.map((question) => {
       const userAnswer = quizAttempt.answers.get(question._id.toString());
-      const correctOption = question.options.find((option) => option.isCorrect);
-      const isCorrect = userAnswer === correctOption.text;
+      const correctOption = question.options[question.correctOption];
+      const isCorrect = userAnswer === correctOption;
 
       return {
         questionText: question.questionText,
-        userAnswer: userAnswer,
-        correctAnswer: correctOption.text,
-        isCorrect: isCorrect,
+        userAnswer,
+        correctOption,
+        isCorrect,
       };
     });
     

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { getQuizAttemptDetails, getQuizFeedback } from '@/actions/useractions.js';
 import io from 'socket.io-client';
+import { SegmentRenderer } from '@/components/Dashboard/indi/create/QuestionPreview';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const ResultPage = ({ quizId, userEmail }) => {
@@ -84,10 +85,10 @@ const ResultPage = ({ quizId, userEmail }) => {
     }, [quizId, userEmail]);
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-300 dark:from-zinc-800 dark:to-[var(--bg-dark)] text-neutral-800 dark:text-[#e3e3e3] md:p-6">
-            <div className="bg-white dark:bg-neutral-800 dark:shadow-stone-900 dark:border dark:border-neutral-700 shadow-2xl rounded-lg max-w-4xl min-h-screen xl:min-h-full xl:max-w-6xl mx-auto py-8 px-4 sm:p-8 transition-all duration-500">
+        <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-300 dark:from-slate-900 dark:to-slate-900 text-neutral-800 dark:text-[#e3e3e3] md:p-6">
+            <div className="bg-white dark:bg-slate-800 dark:shadow-slate-900 dark:border dark:border-slate-700 shadow-2xl rounded-lg max-w-4xl min-h-screen xl:min-h-full xl:max-w-6xl mx-auto py-8 px-4 sm:p-8 transition-all duration-500">
                 {/* User Result Section */}
-                <div className="bg-white dark:bg-neutral-700 dark:border-neutral-600 dark:bg-opacity-40 flex flex-col items-center gap-4 rounded-lg shadow-lg p-6 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
+                <div className="bg-white dark:bg-slate-700 dark:border-slate-600 dark:bg-opacity-40 flex flex-col items-center gap-4 rounded-lg shadow-lg p-6 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-xl font-semibold text-[#FF5F1F] animate-fade-in-down">
                         Your Quiz Result
                     </h3>
@@ -114,7 +115,7 @@ const ResultPage = ({ quizId, userEmail }) => {
                 </div>
 
                 {/* Leaderboard Section */}
-                <div className="bg-white dark:bg-neutral-700 dark:border-neutral-600 dark:bg-opacity-40 rounded-lg shadow-lg p-6 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
+                <div className="bg-white dark:bg-slate-700 dark:border-slate-600 dark:bg-opacity-40 rounded-lg shadow-lg p-6 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-xl font-semibold text-center text-[#FF5F1F] mb-4 animate-fade-in-down">
                         Leaderboard
                     </h3>
@@ -126,7 +127,7 @@ const ResultPage = ({ quizId, userEmail }) => {
                     )}
                     {!loading && leaderboard.length > 0 && (
                         <div className="overflow-x-auto rounded ">
-                            <table className="min-w-full border dark:border-neutral-700 rounded table-auto text-sm">
+                            <table className="min-w-full border dark:border-slate-700 rounded table-auto text-sm">
                                 <thead>
                                     <tr className="bg-[#FF5F1F] text-white">
                                         <th className="px-2 sm:px-6 py-3 text-center sm:text-left rounded-tl">Rank</th>
@@ -139,12 +140,12 @@ const ResultPage = ({ quizId, userEmail }) => {
                                     {leaderboard.map((user, index) => (
                                         <tr
                                             key={user.userEmail}
-                                            className={`border-b dark:border-neutral-600 ${user.userEmail === userEmail.toLowerCase()
+                                            className={`border-b dark:border-slate-600 ${user.userEmail === userEmail.toLowerCase()
                                                 ? 'bg-yellow-300 dark:bg-emerald-500 font-bold'
                                                 : index % 2 === 0
-                                                    ? 'bg-gray-100 dark:bg-neutral-600'
-                                                    : 'bg-white dark:bg-neutral-700'
-                                                } hover:bg-gray-200 dark:hover:bg-neutral-800 transition-all duration-200`}
+                                                    ? 'bg-gray-100 dark:bg-slate-600'
+                                                    : 'bg-white dark:bg-slate-700'
+                                                } hover:bg-gray-200 dark:hover:bg-slate-800 transition-all duration-200`}
                                         >
                                             <td className="px-2 sm:px-6 py-3 text-center">{index + 1}</td>
                                             <td className="px-2 sm:px-6 py-3 text-ellipsis font-semibold">{user.userEmail}</td>
@@ -174,7 +175,7 @@ const ResultPage = ({ quizId, userEmail }) => {
                 </div>
 
                 {/* Quiz Feedback Section */}
-                <div className="bg-white dark:bg-neutral-700 dark:border-neutral-600 dark:bg-opacity-40 rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
+                <div className="bg-white dark:bg-slate-700 dark:border-slate-600 dark:bg-opacity-40 rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-xl font-semibold text-center mb-4 text-[#FF5F1F] animate-fade-in-down">
                         Answers
                     </h3>
@@ -183,20 +184,30 @@ const ResultPage = ({ quizId, userEmail }) => {
                             {feedback.map((question, index) => (
                                 <details
                                     key={index}
-                                    className="mb-4 border dark:border-neutral-700 border-gray-200 rounded-lg shadow-sm transition-all duration-300"
+                                    className="mb-4 border dark:border-slate-700 border-gray-200 rounded-lg shadow-sm transition-all duration-300"
                                 >
-                                    <summary className="p-3 cursor-pointer dark:bg-neutral-800 dark:border-neutral-600 dark:hover:bg-neutral-900 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all duration-200">
-                                        <strong>Q{index + 1}:</strong> {question.questionText}
+                                    <summary className="p-3 cursor-pointer dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-900 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all duration-200">
+                                        <strong>Q{index + 1}:</strong>
+                                        <div className="flex-1 space-y-4">
+                                            {question.questionText.map((segment, segIndex) => (
+                                                <SegmentRenderer
+                                                    key={segIndex}
+                                                    segment={segment}
+                                                    isAttempting={true}
+                                                    isEditing={false}
+                                                />
+                                            ))}
+                                        </div>
                                     </summary>
                                     <div className="p-3 text-neutral-800">
                                         <div
-                                            className={`p-3 rounded-lg ${question.isCorrect ? 'bg-green-100 dark:bg-green-200' : 'bg-red-200 dark:bg-red-300'
+                                            className={`p-3 rounded-lg ${question.isCorrect ? 'bg-green-100 dark:bg-green-200' : 'bg-red-200 dark:bg-red-200'
                                                 }`}
                                         >
                                             <strong>Your Answer:</strong> {question.userAnswer}
                                         </div>
-                                        <div className="p-3 rounded-lg bg-green-300 dark:bg-green-400 mt-2">
-                                            <strong>Correct Answer:</strong> {question.correctAnswer}
+                                        <div className="p-3 rounded-lg bg-green-300 dark:bg-green-300 mt-2">
+                                            <strong>Correct Answer:</strong> {question.correctOption}
                                         </div>
                                     </div>
                                 </details>

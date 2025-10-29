@@ -77,7 +77,7 @@ const MainNavbar = () => {
                                         <div className="w-2 h-2 border-t-[1.5px] border-r-[1.5px] rounded-tr-sm border-black dark:border-white transform rotate-[135deg]"></div>
                                     </span>
                                 </button>
-                                <div className={`account-dropdown-menu absolute mt-2 w-fit md:w-48 transition-all duration-300 overflow-hidden ${dropdownOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} bg-white dark:bg-neutral-900 rounded-md shadow-lg z-20`}>
+                                <div className={`account-dropdown-menu absolute mt-2 right-0 sm:left-0 w-fit md:w-48 transition-all duration-300 overflow-hidden ${dropdownOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"} bg-white dark:bg-slate-800 rounded-md shadow-lg z-20`}>
                                     <Link href="/dashboard">
                                         <div className="block px-4 py-2 rounded-t-md text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Dashboard</div>
                                     </Link>

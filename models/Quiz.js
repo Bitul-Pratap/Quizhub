@@ -1,22 +1,10 @@
 import mongoose from "mongoose";
-const {Schema, model} = mongoose;
-
-const optionSchema = new Schema({
-    text: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    isCorrect: {
-        type: Boolean,
-        default: false,
-    },
-});
+const { Schema, model } = mongoose;
 
 const segmentSchema = new Schema({
-        type: {
+    type: {
         type: String,
-        enum: ['text', 'code'],
+        enum: ['text', 'code', 'table', 'image', 'math'],
         required: true,
     },
     content: {
@@ -31,8 +19,9 @@ const segmentSchema = new Schema({
     }
 }, { _id: false });
 
-const questionTextSchema = new Schema({
-    segments: {
+
+const questionSchema = new Schema({
+    questionText: {
         type: [segmentSchema],
         required: true,
         validate: {
@@ -40,28 +29,15 @@ const questionTextSchema = new Schema({
                 return value.length > 0; // Ensure there is at least one segment
             },
             message: 'Question text must have at least one segment.',
-        }
-    },
-}, { _id: false });
-
-const questionSchema = new Schema({
-    questionText: {
-        type: questionTextSchema,
-        required: true,
-        validate: {
-            validator: function (value) {
-                return value.segments.length > 0; // Ensure there is at least one segment
-            },
-            message: 'Question text must have at least one segment.',
         },
     },
     options: {
-        type: [optionSchema],
+        type: [String],
         validate: {
             validator: function (value) {
-                return value.length === 4; // Ensures there are exactly 4 options
+                return value.length >= 2; // Ensures there are at least 2 options
             },
-            message: 'Each question must have exactly 4 options.',
+            message: 'Each question must have at least 2 options.',
         },
         required: true,
     },
@@ -69,8 +45,8 @@ const questionSchema = new Schema({
         type: Number,
         required: true,
         validate: {
-        validator: (val) => val >= 1,
-        message: 'Each question must have minimum 1 mark.',
+            validator: (val) => val >= 0 ,
+            message: 'Marks cannot be negative.',
         }
     },
     explanation: {
@@ -78,6 +54,16 @@ const questionSchema = new Schema({
         trim: true,
         default: '',
     },
+    correctOption: {
+        type: Number,
+        required: true,
+        validate: {
+            validator: function (value) {
+                return value >= 0 && value < this.options.length; // Ensure correctOption is a valid index
+            },
+            message: 'Correct option index must be within the range of options.',
+        },
+    }
 });
 
 const QuizSchema = new Schema({
@@ -117,7 +103,7 @@ const QuizSchema = new Schema({
         //     message: 'End date must be in the future for non-endless quizzes.',
         // },
     },
-    questions:{
+    questions: {
         type: [questionSchema],
         validate: {
             validator: function (value) {
@@ -137,7 +123,7 @@ const QuizSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'QuizAttempt',  // Reference to QuizAttempt
     }],
-},{ timestamps: true });
+}, { timestamps: true });
 
 // Add index on title and subject to optimize search queries
 QuizSchema.index({ title: 1, subject: 1, quizId: 1, creater: 1 });  // 1 represents ascending order

@@ -5,8 +5,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --bg-dark: #121212;
 }
+
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -16,15 +16,16 @@
 }
 
 body {
-  @apply bg-gradient-to-b from-slate-100 to-slate-200 dark:from-neutral-800 dark:to-neutral-900;
   /* color: var(--foreground);
   background: var(--background); */
   min-height: 100vh;
   background-attachment: fixed;
   font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', sans-serif;
   /* will-change: transform; */
   backface-visibility: hidden;
 }
+
 
 /* Slide-in from left */
 .slide-in {
@@ -141,4 +142,31 @@ body {
               linear-gradient(to right, #FF5F1F, #ff8f62) border-box;
   border-radius: 2px;
   border-bottom: 4px solid transparent;
+}
+
+/* Custom scrollbar for dark mode */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-100 dark:bg-slate-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400 dark:bg-slate-500;
+}
+
+
+@layer utilities{
+  .ringOut-Set:focus{
+    @apply outline-none ring-2  ring-offset-2 ;
+  }
+  .ringOut-var-1:focus{
+    @apply ring-slate-400 dark:ring-slate-600 ring-offset-neutral-100 dark:ring-offset-neutral-900;
+  }
 }

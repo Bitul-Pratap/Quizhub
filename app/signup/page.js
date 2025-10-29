@@ -11,14 +11,14 @@ const Regtype = () => {
     }
     return (
         <>
-            <div className='flex justify-center h-full min-h-screen bg-slate-100 items-center text-neutral-800 dark:text-[#e3e3e3] dark:bg-[var(--bg-dark)]  py-4'>
-                <div className='lg:w-2/3 2xl:max-w-[60%] min-w-[50%] flex lg:flex-row flex-col-reverse bg-[#FF5F1F] shadow-lg dark:shadow-neutral-950 shadow-slate-400 rounded  md:min-h-[60vh]'>
-                    <div className="lg:w-1/2 dark:border dark:border-neutral-700 bg-zinc-100 dark:bg-neutral-800 rounded flex items-center rounded-tl-3xl lg:rounded-tl rounded-tr-3xl lg:rounded-br-3xl ">
+            <div className='flex justify-center h-full min-h-screen bg-slate-100 dark:bg-inherit items-center text-neutral-800 dark:text-[#e3e3e3]  py-4'>
+                <div className='lg:w-2/3 2xl:max-w-[60%] min-w-[50%] flex lg:flex-row flex-col-reverse bg-[#FF5F1F] shadow-md dark:shadow-slate-950 shadow-neutral-400 rounded  md:min-h-[60vh]'>
+                    <div className="lg:w-1/2 dark:border dark:border-slate-700 bg-zinc-100 dark:bg-slate-800 rounded flex items-center rounded-tl-3xl lg:rounded-tl rounded-tr-3xl lg:rounded-br-3xl ">
                         <form className='w-full flex flex-col justify-center gap-4 p-10 px-8 sm:px-16'>
                             <h2 className='text-3xl font-bold'>
                                 <span className='text-[#FF4c00]'>R</span>egister as...
                             </h2>
-                            <select onChange={handleChange} name="reg_type" id="res_type" className='rounded-lg cursor-pointer dark:bg-[var(--bg-dark)] dark:border-neutral-700 bg-transparent w-full border-[1.4px]  focus:border-orange-400 outline-none border-gray-400 p-2 '>
+                            <select onChange={handleChange} name="reg_type" id="res_type" className='rounded-lg cursor-pointer dark:border-slate-600 bg-transparent w-full border-[1.4px]  focus:border-orange-400 outline-none border-gray-400 p-2 dark:bg-slate-700'>
                                 <option value="Organization">Organization</option>
                                 <option value="Individual">Individual</option>
                             </select>

@@ -128,20 +128,20 @@ const Login = () => {
             // progressStyle={{background: "#FF5F1F"}}
 
             />
-            <div className='flex justify-center items-center h-full min-h-screen bg-slate-100 dark:bg-[var(--bg-dark)] text-neutral-800 dark:text-[#e3e3e3]'>
-                <div className='lg:w-2/3 2xl:max-w-[60%] min-w-[50%] flex my-[4%] flex-col-reverse lg:flex-row bg-[#FF5F1F] shadow-lg dark:shadow-neutral-950 shadow-slate-400  rounded '>
-                    <div className="lg:w-1/2 border border-neutral-300 dark:border-neutral-700 w-full bg-slate-100 dark:bg-neutral-800 rounded flex flex-col items-center rounded-tl-3xl lg:rounded-tl rounded-tr-3xl lg:rounded-br-3xl gap-4 p-8 lg:p-10 md:px-12">
+            <div className='flex justify-center items-center h-full min-h-screen bg-slate-100 dark:bg-inherit text-neutral-800 dark:text-[#e3e3e3]'>
+                <div className='lg:w-2/3 2xl:max-w-[60%] min-w-[50%] flex my-[4%] flex-col-reverse lg:flex-row bg-[#FF5F1F] shadow-md dark:shadow-slate-950 shadow-slate-400  rounded '>
+                    <div className="lg:w-1/2 border border-neutral-300 dark:border-slate-700 w-full bg-slate-100 dark:bg-slate-800 rounded flex flex-col items-center rounded-tl-3xl lg:rounded-tl rounded-tr-3xl lg:rounded-br-3xl gap-4 p-8 lg:p-10 md:px-12">
                         <h2 className='text-3xl font-bold'><span className='text-[#FF4c00] text-[#ff5f1f]'>L</span>ogin</h2>
                         <form onSubmit={handleSubmit} className='flex flex-col gap-4 w-full'>
                             <div className='fields flex flex-col gap-2'>
                                 <div>
                                     <label htmlFor="email" className='block mb-1' >Email</label>
-                                    <input onChange={handleChange} id='email' type="email" name='email' value={form.email ? form.email : ""} className='rounded-md w-full bg-transparent text-sm border-[1.4px]  focus:border-orange-400 outline-none border-gray-400 dark:border-neutral-600 dark:focus:border-orange-400 p-2' placeholder='Enter email' />
+                                    <input onChange={handleChange} id='email' type="email" name='email' value={form.email ? form.email : ""} className='rounded-md w-full bg-transparent text-sm border-[1.4px]  focus:border-orange-400 outline-none border-gray-400 dark:border-slate-600 dark:focus:border-orange-400 p-2' placeholder='Enter email' />
                                 </div>
                                 <div>
                                     <label htmlFor="password" className='block mb-1' >Password</label>
                                     <div className='relative'>
-                                        <input onChange={handleChange} id='password' type={show ? "text" : "password"} name="password" value={form.password ? form.password : ""} className='rounded-md w-full bg-transparent text-sm border-[1.4px]  focus:border-orange-400 outline-none border-gray-400 dark:border-neutral-600 dark:focus:border-orange-400 p-2 pr-10' placeholder='Enter password' />
+                                        <input onChange={handleChange} id='password' type={show ? "text" : "password"} name="password" value={form.password ? form.password : ""} className='rounded-md w-full bg-transparent text-sm border-[1.4px]  focus:border-orange-400 outline-none border-gray-400 dark:border-slate-600 dark:focus:border-orange-400 p-2 pr-10' placeholder='Enter password' />
                                         <div onClick={() => { setShow(!show) }} className='absolute right-0 rounded-r-md bg-transparent flex items-center justify-center -translate-y-[95%] w-fit p-2 cursor-pointer'>
                                             {show !== true ?
                                                 (<svg  className="eye-close" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g strokeWidth="0"></g><g strokeLinecap="round" strokeLinejoin="round"></g><g > <path d="M4 10C4 10 5.6 15 12 15M12 15C18.4 15 20 10 20 10M12 15V18M18 17L16 14.5M6 17L8 14.5" className='dark:stroke-gray-300' stroke="#464455" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>) : (
@@ -162,7 +162,7 @@ const Login = () => {
                         </form>
                     </div>
                     <div className="lg:w-1/2 bg-[#FF5F1F] rounded text-white flex flex-col gap-6 items-center p-10 px-16">
-                        <h1 className='text-2xl font-bold bg-slate-100 dark:bg-neutral-800 text-neutral-800 dark:text-inherit w-full rounded-lg text-center border border-neutral-300 dark:border-neutral-600 py-2'><span className='text-[#FF5F1F] text-3xl'>L</span>ogin to <br /><span className='text-[#FF5F1F] text-3xl'>Q</span>uizhub</h1>
+                        <h1 className='text-2xl font-bold bg-slate-100 dark:bg-slate-800 text-neutral-800 dark:text-inherit w-full rounded-lg text-center border border-neutral-300 dark:border-slate-700 py-2'><span className='text-[#FF5F1F] text-3xl'>L</span>ogin to <br /><span className='text-[#FF5F1F] text-3xl'>Q</span>uizhub</h1>
                         <p className='text-lg'>Login to get started</p>
                     </div>
                 </div>

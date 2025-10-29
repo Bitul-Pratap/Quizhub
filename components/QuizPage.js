@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { SegmentRenderer } from '@/components/Dashboard/indi/create/QuestionPreview';
 
 const QuizAttemptPage = ({ quizData }) => {
     const router = useRouter();
@@ -122,8 +123,9 @@ const QuizAttemptPage = ({ quizData }) => {
         quizData.questions.forEach((question) => {
             maxMarks += question.marks;
 
-            const correctOption = question.options.find((option) => option.isCorrect);
-            if (selectedAnswers[question._id] === correctOption.text) {
+            // const correctOption = question.options.find((option) => option.isCorrect);
+            const correctOption = question.options[question.correctOption];
+            if (selectedAnswers[question._id] === correctOption) {
                 totalMarks += question.marks;
                 correctQuestions += 1;
             }
@@ -187,8 +189,8 @@ const QuizAttemptPage = ({ quizData }) => {
                 theme="light"
                 toastStyle={{ background: "#FF5F1F", width: "100%" }}
             />
-            <div className="flex flex-col items-center justify-center text-neutral-800 dark:text-[#e3e3e3]  px-5 py-10 sm:p-10 min-h-screen dark:from-zinc-800 dark:to-zinc-900 bg-gradient-to-b from-orange-100 to-orange-300">
-                <div className="bg-white dark:bg-neutral-800 dark:border dark:border-neutral-700 dark:shadow-zinc-900 shadow-lg rounded-xl p-8 w-full max-w-xl">
+            <div className="flex flex-col items-center justify-center text-neutral-800 dark:text-[#e3e3e3]  px-5 py-10 sm:p-10 min-h-screen dark:from-slate-700 dark:to-slate-900 bg-gradient-to-b from-orange-100 to-orange-300">
+                <div className="bg-white dark:bg-slate-700 dark:border dark:border-slate-600 dark:shadow-slate-900 shadow-lg rounded-xl p-8 w-full max-w-xl">
                     <h3 className="text-2xl font-bold text-center text-[#FF5F1F] mb-4">{quizData.title}</h3>
                     <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
                         Enter your email to start attempting the quiz.
@@ -199,7 +201,7 @@ const QuizAttemptPage = ({ quizData }) => {
                             placeholder="Enter your email"
                             value={userData}
                             onChange={(e) => setUserData(e.target.value)}
-                            className="border border-gray-300 dark:border-neutral-700 bg-transparent rounded-lg px-4 py-2  focus:ring-2 dark:focus:ring-[#fd8454] focus:ring-[#ff956b] outline-none"
+                            className="border-[1.4px] border-gray-300 dark:border-slate-600 bg-transparent rounded-lg px-4 py-2  focus:ring-2 dark:focus:ring-[#fd8454] focus:ring-[#ff956b] outline-none"
                         />
                         <button
                             type="submit"
@@ -230,14 +232,14 @@ const QuizAttemptPage = ({ quizData }) => {
                 theme="light"
                 toastStyle={{ background: "#FF5F1F" }}
             />
-            <div className="min-h-screen text-neutral-800 dark:text-[#e3e3e3]  bg-gradient-to-b from-gray-200 to-gray-300  dark:from-zinc-800 dark:to-[var(--bg-dark)] sm:p-6">
-                <div className="bg-white min-h-screen xl:min-h-full relative dark:bg-neutral-800 border border-zinc-300 dark:border-neutral-700  shadow-xl dark:shadow-neutral-950 rounded-lg transition-all duration-500 max-w-4xl xl:max-w-6xl mx-auto p-8">
+            <div className="min-h-screen text-neutral-800 dark:text-[#e3e3e3]  bg-gradient-to-b from-gray-200 to-gray-300  dark:from-slate-900 dark:to-slate-900 sm:p-6">
+                <div className="bg-white min-h-screen xl:min-h-full relative dark:bg-slate-800 border border-zinc-300 dark:border-slate-700  shadow-xl dark:shadow-slate-950 rounded-lg transition-all duration-500 max-w-4xl xl:max-w-6xl mx-auto p-8">
                     <h3 className="text-2xl font-bold text-center text-[#FF5F1F] mb-6">{quizData.title}</h3>
                     {/* Progress Bar */}
-                    <div className="mb-6 sticky top-20 bg-white dark:bg-neutral-700 dark:bg-opacity-50 dark:backdrop-blur-md py-2 px-4 sm:p-4 rounded-lg dark:shadow-zinc-900 shadow-md border dark:border-neutral-600 border-gray-200 z-10">
+                    <div className="mb-6 sticky top-20 bg-white dark:bg-slate-600 dark:bg-opacity-50 dark:backdrop-blur-md py-2 px-4 sm:p-4 rounded-lg dark:shadow-slate-900 shadow-md border dark:border-slate-600 border-gray-200 z-10">
                         <p className="text-lg font-semibold text-gray-700 dark:text-neutral-400">Progress: {Math.round(progressPercentage)}%</p>
                         <div className="relative w-full h-4 rounded-full overflow-hidden">
-                            <div className="bg-gray-300 dark:bg-neutral-500 w-full h-full rounded-full">
+                            <div className="bg-gray-300 dark:bg-slate-500 w-full h-full rounded-full">
                                 <div
                                     className="bg-[#FF5F1F] h-full rounded-full"
                                     style={{
@@ -255,27 +257,39 @@ const QuizAttemptPage = ({ quizData }) => {
                     {/* Questions */}
                     <div className="flex flex-col gap-6">
                         {quizData.questions.map((question, index) => (
-                            <div key={index} className="bg-gray-50 dark:bg-neutral-700 dark:bg-opacity-40 dark:border-neutral-600 p-6 rounded-lg shadow-md dark:shadow-zinc-900 border border-gray-200">
-                                <h4 className="text-lg font-semibold mb-4">
-                                    Q{index + 1}: {question.questionText}
+                            <div key={index} className="bg-gray-50 dark:bg-slate-700 dark:bg-opacity-40 dark:border-slate-600 p-6 rounded-lg shadow-md dark:shadow-slate-900 border border-gray-200">
+                                <div className="flex gap-2 mb-4">
+                                <h4 className="font-semibold">
+                                    Q{index + 1}.
                                 </h4>
+                                <div className="flex-1 space-y-4" >
+                                {question.questionText.map((segment, segIndex) => (
+                                    <SegmentRenderer
+                                        key={segIndex}
+                                        segment={segment}
+                                        isAttempting={true}
+                                        isEditing={false}
+                                    />
+                                ))}
+                                </div>
+                                </div>
                                 <div className="flex flex-col gap-3">
                                     {question.options.map((option, optIndex) => (
                                         <label
                                             key={optIndex}
-                                            className="flex items-center gap-3 p-3 border dark:border-neutral-600 border-gray-300 rounded-lg dark:hover:shadow-zinc-950 hover:shadow-md transition cursor-pointer"
+                                            className="flex items-center gap-3 p-3 border dark:border-slate-600 border-gray-300 rounded-lg dark:hover:shadow-slate-950 hover:shadow-md transition cursor-pointer bg-slate-700"
                                         >
                                             <input
                                                 type="radio"
                                                 name={`question-${question._id}`}
-                                                value={option.text}
-                                                checked={selectedAnswers[question._id] === option.text}
+                                                value={option}
+                                                checked={selectedAnswers[question._id] === option}
                                                 onChange={() =>
-                                                    handleAnswerChange(question._id, option.text)
+                                                    handleAnswerChange(question._id, option)
                                                 }
-                                                className="form-radio text-[#FF5F1F] "
+                                                className="form-radio accent-[#FF5F1F]  "
                                             />
-                                            <span className="text-gray-800 dark:text-neutral-300">{option.text}</span>
+                                            <span className="text-gray-800 dark:text-neutral-300">{option}</span>
                                         </label>
                                     ))}
                                 </div>

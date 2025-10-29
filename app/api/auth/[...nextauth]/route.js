@@ -2,6 +2,7 @@ import connectDB from '@/db/connectDb';
 import User from '@/models/User';
 import NextAuth from 'next-auth'
 import CredentialsProvider from "next-auth/providers/credentials"
+import bcrypt from 'bcrypt';
 
 export const authOptions = NextAuth({
     providers:[
@@ -20,7 +21,7 @@ export const authOptions = NextAuth({
                 if(!user)
                     throw new Error('Invalid credentials');
 
-                const passwordMatch = (password==user.password);
+                const passwordMatch = await bcrypt.compare(password, user.password);
                 // console.log(passwordMatch)
                 if(!passwordMatch)
                     throw new Error('Invalid credentials');

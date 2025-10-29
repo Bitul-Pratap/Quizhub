@@ -2,16 +2,20 @@
 
 import { useState, useCallback } from "react"
 import { Upload, FileText, ImageIcon, Edit, Trash2, Plus, Save, X } from "lucide-react"
+import Modal from '@/components/Modal'
 
 export function FileImport({ onAddMultipleQuestions }) {
     const [isDragOver, setIsDragOver] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false)
+    const [files, setFiles] = useState([])
     const [uploadedFile, setUploadedFile] = useState(null)
+    const [uploading, setUploading] = useState(false);
     const [extractedQuestions, setExtractedQuestions] = useState([])
     const [showPreview, setShowPreview] = useState(false)
     const [editingId, setEditingId] = useState(null)
     const [editingQuestion, setEditingQuestion] = useState(null)
     const [errors, setErrors] = useState({})
+    const [showModal, setShowModal] = useState(false)
 
     const handleDragOver = useCallback((e) => {
         e.preventDefault()
@@ -26,11 +30,14 @@ export function FileImport({ onAddMultipleQuestions }) {
     const handleDrop = useCallback((e) => {
         e.preventDefault()
         setIsDragOver(false)
+        ModalHandler();
+        return;
         const files = Array.from(e.dataTransfer.files)
         if (files.length > 0) {
             handleFileUpload(files[0])
         }
     }, [])
+
 
     const handleFileUpload = async (file) => {
         setUploadedFile(file)
@@ -114,7 +121,7 @@ export function FileImport({ onAddMultipleQuestions }) {
 
     const handleSave = () => {
         if (editingQuestion && editingId) {
-            if(!validateQuestion()) return;
+            if (!validateQuestion()) return;
             updateQuestion(editingId, editingQuestion)
             setEditingId(null)
             setEditingQuestion(null)
@@ -132,7 +139,55 @@ export function FileImport({ onAddMultipleQuestions }) {
         <div className={`bg-slate-200 dark:bg-slate-700 rounded animate-pulse ${className}`} />
     )
 
+
+    const handleFileChange = (e) => {
+        e.preventDefault();
+        if (e.target.files) {
+            const selected = Array.from(e.target.files);
+            console.log('Selected files:', selected);
+            setFiles(selected);
+            handleUpload(e, selected);
+        }
+    };
+
+    const handleUpload = async (e, selectedFiles) => {
+        e.preventDefault();
+        const formData = new FormData();
+        selectedFiles.forEach((file) => formData.append('files', file));
+        // for (let pair of formData.entries()) {
+        //     console.log(pair[0], pair[1]);
+        // }
+        console.log([...formData.entries()]);
+        setUploading(true);
+
+        const res = await fetch('/api/quiz/import-files/upload', {
+            method: 'POST',
+            body: formData,
+        });
+
+        setUploading(false);
+        const result = await res.json();
+        console.log('Uploaded:', result);
+    };
+
+    const ModalHandler = () => {
+        setShowModal(true);
+        return;
+    }
+
+
     return (
+        <>
+        {/* Modal for file import */}
+        {showModal && (
+            <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="lg" type="info" 
+                title="Under development"
+                content={<>
+                    <p className="mb-2">The file import feature is currently under development and will be available soon. Stay tuned for updates!</p>
+                    <span role="img" aria-label="smile" className="text-xl">🚧👷‍♂️🚧</span>
+                </>}
+            />
+        )}
         <div className="space-y-6">
             {/* Card */}
             <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border border-blue-200 dark:border-blue-700 rounded-lg shadow-sm">
@@ -157,39 +212,42 @@ export function FileImport({ onAddMultipleQuestions }) {
                         <p className="text-slate-600 dark:text-slate-400 mb-4">Supports PDF, DOCX, JPG, PNG files</p>
                         <input
                             type="file"
+                            multiple
                             accept=".pdf,.docx,.jpg,.jpeg,.png"
-                            onChange={handleFileInputChange}
+                            onChange={handleFileChange}
                             className="hidden"
                             id="file-upload"
+                            disabled
                         />
-                        <label
-                            htmlFor="file-upload"
+                        <button
+                            // htmlFor="file-upload"
+                            onClick={ModalHandler}
                             className="inline-block px-4 py-2 border border-slate-300 rounded bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                         >
                             Choose File
-                        </label>
+                        </button>
                     </div>
-                    {uploadedFile && (
-                        <div className="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center space-x-3">
-                            {getFileIcon(uploadedFile.name)}
+                    {files.map((file, idx) => (
+                        <div key={idx} className="mt-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center space-x-3">
+                            {getFileIcon(file.name)}
                             <div className="flex-1">
-                                <p className="font-medium">{uploadedFile.name}</p>
+                                <p className="font-medium">{file.name}</p>
                                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                                    {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+                                    {(file.size / 1024 / 1024).toFixed(2)} MB
                                 </p>
                             </div>
                             {isProcessing && (
                                 <span className="px-2 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">Processing...</span>
                             )}
                         </div>
-                    )}
+                    ))}
                 </div>
             </div>
 
             {/* Processing State */}
             {isProcessing && (
                 <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm">
-                    <div className="p-6 border-b border-slate-100 dark:border-slate-700">
+                    <div className="p-6 ">
                         <div className="text-xl font-semibold">AI is analyzing your file...</div>
                     </div>
                     <div className="p-6 pt-0 space-y-4">
@@ -381,5 +439,6 @@ export function FileImport({ onAddMultipleQuestions }) {
                 </div>
             )}
         </div>
+        </>
     )
 }

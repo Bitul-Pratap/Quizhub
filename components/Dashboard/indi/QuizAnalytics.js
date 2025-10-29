@@ -61,9 +61,9 @@ const QuizAnalytics = () => {
   };
 
   return (
-    <div className="sm:px-3 text-neutral-800 dark:text-[#e3e3e3]">
+    <div className="sm:px-3 text-slate-800 dark:text-[#e3e3e3]">
       <h1 className="text-2xl font-bold text-center mb-6">Quiz Analytics</h1>
-      <div className="p-4 sm:p-6 rounded bg-stone-200 bg-opacity-70 dark:bg-neutral-800 dark:border-neutral-700 border border-gray-300">
+      <div className="p-4 sm:p-6 rounded bg-stone-200 bg-opacity-70 dark:bg-slate-800 dark:border-slate-700 border border-gray-300">
         {loading ? (<Loading content={"Fetching quiz info..."} />) : (
           <>
             {/* Quiz Selection */}
@@ -74,7 +74,7 @@ const QuizAnalytics = () => {
                       id="quizSelect"
                       onChange={handleQuizSelect}
                       value={selectedQuiz || ""}
-                      className=" bg-gray-50 dark:bg-neutral-900 text-gray-900 dark:text-inherit dark:border-neutral-700 text-sm p-2.5 w-full border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#FF5F1f] focus:border-transparent outline-none transition-all duration-300 hover:border-[#FF5F1f] cursor-pointer appearance-none"
+                      className=" bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-inherit dark:border-slate-700 text-sm p-2.5 w-full border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#FF5F1f] focus:border-transparent outline-none transition-all duration-300 hover:border-[#FF5F1f] cursor-pointer appearance-none"
                       // onClick={(e) => e.target.classList.toggle('open')}
                     >
                       <option value="">-- Select a Quiz --</option>
@@ -109,12 +109,12 @@ const QuizAnalytics = () => {
                   {/* Analytics Display */}
           {analytics ? (
             <>
-              <div className="bg-white dark:bg-neutral-900 shadow-md dark:shadow-neutral-950 rounded-lg p-6">
+              <div className="bg-white dark:bg-slate-900 shadow-md dark:shadow-slate-950 rounded-lg p-6">
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-inherit mb-4">{analytics.title} Analytics</h2>
 
                 {/* Quiz info */}
 
-                <div className="mb-6 border-b border-gray-200 dark:border-neutral-700 pb-4 flex md:flex-row flex-col justify-between">
+                <div className="mb-6 border-b border-gray-200 dark:border-slate-700 pb-4 flex md:flex-row flex-col justify-between">
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Subject: {analytics.subject} | Title: {analytics.title}
                   </p>
@@ -129,13 +129,13 @@ const QuizAnalytics = () => {
                           <h3 className=" font-semibold text-gray-700 dark:text-gray-300">Leaderboard</h3>
                           {analytics.leaderboard.length > 0 ? (
                           <>
-                            <ul className={`mt-2 border will-change-auto border-gray-300 dark:border-neutral-700 rounded-lg transition delay-75 duration-200 hover:shadow-[0_3px_6px_-2px_rgb(255,95,31)]  p-2`}
+                            <ul className={`mt-2 border will-change-auto border-gray-300 dark:border-slate-700 rounded-lg transition delay-75 duration-200 hover:shadow-[0_3px_6px_-2px_rgb(255,95,31)]  p-2`}
                             >
                             {(showAll
                               ? analytics.leaderboard
                               : analytics.leaderboard.slice(0, 10)
                             ).map((attempt, index) => (
-                              <li key={index} className={`flex flex-col sm:flex-row will-change-auto gap-1 sm:gap-0 text-sm justify-between p-2 border-b border-gray-200 dark:border-neutral-400 opacity-0 ${index > 9 ? "animate-slide-up" : "animate-slide-in"}`}
+                              <li key={index} className={`flex flex-col sm:flex-row will-change-auto gap-1 sm:gap-0 text-sm justify-between p-2 border-b border-gray-200 dark:border-slate-400 opacity-0 ${index > 9 ? "animate-slide-up" : "animate-slide-in"}`}
                               style={{ animationDelay: `${index * 0.1}s` }} >
                               <div className="flex items-center gap-2 sm:gap-4">
                                 <span>{index + 1}. </span><span>{attempt.userEmail}</span>
@@ -165,15 +165,15 @@ const QuizAnalytics = () => {
 
                 {/* Total Attempts */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                  <div className="p-4 border rounded-lg dark:border-neutral-700 bg-zinc-100 dark:bg-neutral-800 hover:shadow-md dark:hover:shadow-zinc-700 transition-shadow">
+                  <div className="p-4 border rounded-lg dark:border-slate-700 bg-zinc-100 dark:bg-slate-800 hover:shadow-md dark:hover:shadow-slate-700 transition-shadow">
                     <h3 className="font-semibold text-gray-700 dark:text-gray-300">Total Attempts</h3>
                     <p className="text-sm">{analytics.totalAttempts} attempts</p>
                   </div>
-                  <div className="p-4 border rounded-lg dark:border-neutral-700 bg-zinc-100 dark:bg-neutral-800 hover:shadow-md dark:hover:shadow-zinc-700 transition-shadow">
+                  <div className="p-4 border rounded-lg dark:border-slate-700 bg-zinc-100 dark:bg-slate-800 hover:shadow-md dark:hover:shadow-slate-700 transition-shadow">
                     <h3 className="font-semibold text-gray-700 dark:text-gray-300">Average Score</h3>
                     <p className="text-sm">{analytics.averageScore}</p>
                   </div>
-                  <div className="p-4 border rounded-lg dark:border-neutral-700 bg-zinc-100 dark:bg-neutral-800 hover:shadow-md dark:hover:shadow-zinc-700 transition-shadow">
+                  <div className="p-4 border rounded-lg dark:border-slate-700 bg-zinc-100 dark:bg-slate-800 hover:shadow-md dark:hover:shadow-slate-700 transition-shadow">
                     <h3 className="font-semibold text-gray-700 dark:text-gray-300">Average Accuracy</h3>
                     <p className="text-sm">{analytics.averageAccuracy}%</p>
                   </div>

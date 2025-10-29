@@ -1,22 +1,21 @@
 'use client';
 import { getUserId, storeQuizData } from '@/actions/useractions.js';
 import { useSession } from 'next-auth/react';
-import React, { useRef, useState } from 'react';
-import { toast, ToastContainer, Bounce } from 'react-toastify';
-import * as motion from 'motion/react-client';
-import { AnimatePresence } from 'motion/react';
-import { PenTool, Brain, Upload, Save, X, ArrowLeftIcon } from 'lucide-react';
+import React, { useState } from 'react';
+import { toast, Bounce } from 'react-toastify';
+import { PenTool, Brain, Upload, Save, X, ArrowLeftIcon, GripVertical } from 'lucide-react';
 import { ManualCreation } from './ManualCreation';
 import { AIGeneration } from './AIGeneration';
 import { FileImport } from './FileImport';
 import { QuizPreview } from './QuizPreview';
+import { PanelGroup, Panel, PanelResizeHandle } from 'react-resizable-panels';
+import useMediaQuery from '@/hooks/useMediaQuery';
 
 
 const CreateQuiz = () => {
     const { data: session } = useSession();
-
-    const [formData, setFormData] = useState({});
     const [errors, setErrors] = useState({});
+    const isLarge = useMediaQuery('(min-width: 1024px)');
 
     const [quizInfo, setQuizInfo] = useState({
         quizTitle: '',
@@ -60,7 +59,6 @@ const CreateQuiz = () => {
         setFinalise(false);
     }
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -76,13 +74,11 @@ const CreateQuiz = () => {
             endless: quizInfo.endless,
             endDate: quizInfo.endless ? null : convertToMongoDate(quizInfo.endDate),
             questions: questions.map((q) => ({
-                questionText: q.question,
-                options: q.options.map((option, index) => ({
-                    text: option,
-                    isCorrect: q.correctAnswer === index, // Mark the correct option
-                })),
+                questionText: q.questionText,
+                options: q.options,
                 marks: q.marks,
                 explanation: q.explanation || undefined,
+                correctOption: q.correctOption,
             })),
         };
 
@@ -90,7 +86,7 @@ const CreateQuiz = () => {
 
         const quiz = await storeQuizData(quizData);
 
-        if(!quiz.success) {
+        if (!quiz.success) {
             toast.error('Failed to create quiz. Please try again.', {
                 position: "top-center",
                 autoClose: 3000,
@@ -106,26 +102,26 @@ const CreateQuiz = () => {
         }
 
         else {
-        toast.success('Quiz successfully created!', {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-            transition: Bounce,
-        });
-        // Clear form data and mcqs
-        setQuizInfo({
-            quizTitle: '',
-            quizSubject: '',
-            endDate: '',
-            endless: false,
-        });
-        setQuestions([]);
-    }
+            toast.success('Quiz successfully created!', {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+            });
+            // Clear form data and mcqs
+            setQuizInfo({
+                quizTitle: '',
+                quizSubject: '',
+                endDate: '',
+                endless: false,
+            });
+            setQuestions([]);
+        }
 
     };
 
@@ -189,10 +185,152 @@ const CreateQuiz = () => {
     }]
 
 
+    const LeftContent = (
+        finalise ? (
+            <div className='grid grid-rows-none gap-6' >
+                {/* Quiz Info */}
+                < div className="bg-white/80 w-full dark:bg-slate-800/80 border border-slate-200 p-6 shadow-sm mx-auto rounded-lg " >
+                    <div className='space-y-1 mb-4'>
+                        <h2 className="text-2xl font-bold" >Quiz Info</h2>
+                        <p className="text-slate-600 text-sm dark:text-slate-400">
+                            Review and finalize your quiz settings before publishing.
+                        </p>
+                    </div>
+                    <div className='mb-4 space-y-2'>
+                        <label htmlFor="quizTitle" className="block text-sm font-medium">Quiz Title</label>
+                        <input
+                            type="text"
+                            id="quizTitle"
+                            name="quizTitle"
+                            value={quizInfo.quizTitle}
+                            onChange={handleChange}
+                            placeholder="Enter quiz title"
+                            className="w-full p-2 text-sm border border-[#ccc] rounded-md"
+                        />
+                        {errors.quizTitle && (
+                            <div className="text-red-500 text-xs mt-1">{errors.quizTitle}</div>
+                        )}
+                    </div>
+                    <div className='mb-4 space-y-2'>
+                        <label htmlFor="quizSubject" className="block text-sm font-medium">Subject</label>
+                        <input
+                            type="text"
+                            id="quizSubject"
+                            name="quizSubject"
+                            value={quizInfo.quizSubject}
+                            onChange={handleChange}
+                            placeholder="Enter subject"
+                            className="w-full p-2 text-sm border border-[#ccc] rounded-md"
+                        />
+                        {errors.quizSubject && (
+                            <div className="text-red-500 text-xs mt-1">{errors.quizSubject}</div>
+                        )}
+                    </div>
+                    <div id='quizValidity' className='mb-4 space-y-1'>
+                        <label htmlFor='quizValidity' className='text-sm font-medium mb-2'>Quiz Validity</label>
+                        <div className='flex items-center space-x-2 mb-2'>
+                            <input
+                                type="checkbox"
+                                id="endless"
+                                name="endless"
+                                checked={quizInfo?.endless}
+                                onChange={handleChange}
+                                className="cursor-pointer scale-90"
+                            />
+                            <span className="text-sm text-slate-600 dark:text-slate-400">This quiz will be available until you close it.</span>
+                        </div>
+                        <span className='text-sm'>or</span>
+                        <div>
+                            <input
+                                type="date"
+                                id="endDate"
+                                name="endDate"
+                                min={quizInfo.endless ? '' : new Date().toISOString().split('T')[0]} // Disable past dates if not endless
+                                value={quizInfo.endDate}
+                                disabled={quizInfo.endless}
+                                onChange={handleChange}
+                                placeholder="Enter validity (e.g., dd/mm/yyyy)"
+                                className="w-full p-2 text-sm border border-[#ccc] disabled:bg-gray-200 rounded-md"
+                            />
+                        </div>
+                        {errors.quizValidity && (
+                            <div className="text-red-500 text-xs mt-1">{errors.quizValidity}</div>
+                        )}
+                    </div>
+                    <div className='flex space-x-3 pt-4'>
+                        <button
+                            type="button"
+                            className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-md"
+                            onClick={handleSubmit}
+                        >
+                            <Save className='w-4 h-4 inline-block mr-1' />
+                            Save Quiz
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleCancel}
+                            className="bg-white border border-slate-300  px-4 py-2 rounded-md"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div >
+                {/* Quiz summary */}
+                < div className="w-full  bg-white/80 dark:bg-slate-800/80 border border-slate-200 p-6 shadow-sm mx-auto rounded-lg" >
+                    <h2 className="text-2xl font-bold mb-4">Quiz Summary</h2>
+                    <div className="flex justify-between items-start text-sm">
+                        <div className="space-y-2">
+                            <p><strong>Title:</strong> {quizInfo.quizTitle}</p>
+                            <p><strong>Subject:</strong> {quizInfo.quizSubject}</p>
+                            <p><strong>Validity:</strong> {quizInfo.endless ? 'Endless' : quizInfo.endDate ? new Date(quizInfo.endDate).toLocaleDateString() : 'Not set'}</p>
+                        </div>
+                        <div className='space-y-2'>
+                            <p><strong>Total Questions:</strong> {questions.length}</p>
+                            <p><strong>Total Marks:</strong> {questions.reduce((total, q) => total + (q.marks), 0)}</p>
+                        </div>
+                    </div>
+                </div >
+            </div >
+        ) : (
+            // {/* Quiz Creation Section */ }
+            < div>
+                <div className="w-full">
+                    <div className="grid grid-cols-3 bg-slate-200/40 dark:bg-slate-800/80  shadow-md rounded-2xl mb-6">
+                        {tabs.map((tab, idx) => (
+                            <div key={tab.key}
+                                className={`flex items-center cursor-pointer transition-colors delay-100 duration-200 text-sm ${activeTab === tab.key ? 'bg-[#FF5F1F] dark:bg-orange-500 text-white' : ' text-slate-500 dark:text-slate-400 '} py-2 px-2 md:px-4 space-x-2 ${idx == 0 ? ' rounded-l-2xl' : idx == 2 ? 'rounded-r-2xl' : ''}`}
+                                onClick={() => setActiveTab(tab.key)}
+                            >
+                                <tab.icon className='hidden sm:block w-4 h-4 flex-shrink-0' />
+                                <span className='leading-none truncate'>{tab.label}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="space-y-6 text-slate-900 dark:text-slate-100">
+                        {tabs.find((tab) => tab.key == activeTab)?.component || <ManualCreation onAddQuestion={addQuestion} />}
+                    </div>
+
+                </div>
+            </div>
+        ))
+
+
+    const RightContent = (
+        <div className="text-slate-900 dark:text-slate-100 sticky top-0 ">
+            <QuizPreview
+                finalise={finalise}
+                setFinalise={setFinalise}
+                questions={questions}
+                onUpdateQuestion={updateQuestion}
+                onRemoveQuestion={removeQuestion}
+            />
+        </div>
+    );
 
     return (
         <>
-            <main className="container mx-auto">
+            <main className="container mx-auto ">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-2">Create a Quiz</h1>
                     <p className="text-slate-600 dark:text-slate-400">
@@ -208,148 +346,25 @@ const CreateQuiz = () => {
                         </button>
                     </div>
                 )}
-                <div className={`grid grid-cols-1 gap-8 ${finalise ? 'lg:grid-cols-2' : 'lg:grid-cols-3 2xl:grid-cols-2'}`}>
-
-                    {finalise ? (
-                        <div className='lg:col-span-1 grid grid-rows-none gap-6'>
-                            {/* Quiz Info */}
-                            <div className="bg-white/80 w-full dark:bg-slate-800/80 border border-slate-200 p-6 shadow-sm mx-auto rounded-lg ">
-                                <div className='space-y-1 mb-4'>
-                                    <h2 className="text-2xl font-bold" >Quiz Info</h2>
-                                    <p className="text-slate-600 text-sm dark:text-slate-400">
-                                        Review and finalize your quiz settings before publishing.
-                                    </p>
-                                </div>
-                                <div className='mb-4 space-y-2'>
-                                    <label htmlFor="quizTitle" className="block text-sm font-medium">Quiz Title</label>
-                                    <input
-                                        type="text"
-                                        id="quizTitle"
-                                        name="quizTitle"
-                                        value={quizInfo.quizTitle}
-                                        onChange={handleChange}
-                                        placeholder="Enter quiz title"
-                                        className="w-full p-2 text-sm border border-[#ccc] rounded-md"
-                                    />
-                                    {errors.quizTitle && (
-                                        <div className="text-red-500 text-xs mt-1">{errors.quizTitle}</div>
-                                    )}
-                                </div>
-                                <div className='mb-4 space-y-2'>
-                                    <label htmlFor="quizSubject" className="block text-sm font-medium">Subject</label>
-                                    <input
-                                        type="text"
-                                        id="quizSubject"
-                                        name="quizSubject"
-                                        value={quizInfo.quizSubject}
-                                        onChange={handleChange}
-                                        placeholder="Enter subject"
-                                        className="w-full p-2 text-sm border border-[#ccc] rounded-md"
-                                    />
-                                    {errors.quizSubject && (
-                                        <div className="text-red-500 text-xs mt-1">{errors.quizSubject}</div>
-                                    )}
-                                </div>
-                                <div id='quizValidity' className='mb-4 space-y-1'>
-                                    <label htmlFor='quizValidity' className='text-sm font-medium mb-2'>Quiz Validity</label>
-                                    <div className='flex items-center space-x-2 mb-2'>
-                                        <input
-                                            type="checkbox"
-                                            id="endless"
-                                            name="endless"
-                                            checked={quizInfo?.endless}
-                                            onChange={handleChange}
-                                            className="cursor-pointer scale-90"
-                                        />
-                                        <span className="text-sm text-slate-600 dark:text-slate-400">This quiz will be available until you close it.</span>
-                                    </div>
-                                    <span className='text-sm'>or</span>
-                                    <div>
-                                        <input
-                                            type="date"
-                                            id="endDate"
-                                            name="endDate"
-                                            min={quizInfo.endless ? '' : new Date().toISOString().split('T')[0]} // Disable past dates if not endless
-                                            value={quizInfo.endDate}
-                                            disabled={quizInfo.endless}
-                                            onChange={handleChange}
-                                            placeholder="Enter validity (e.g., dd/mm/yyyy)"
-                                            className="w-full p-2 text-sm border border-[#ccc] disabled:bg-gray-200 rounded-md"
-                                        />
-                                    </div>
-                                    {errors.quizValidity && (
-                                        <div className="text-red-500 text-xs mt-1">{errors.quizValidity}</div>
-                                    )}
-                                </div>
-                                <div className='flex space-x-3 pt-4'>
-                                    <button
-                                        type="button"
-                                        className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-md"
-                                        onClick={handleSubmit}
-                                    >
-                                        <Save className='w-4 h-4 inline-block mr-1' />
-                                        Save Quiz
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={handleCancel}
-                                        className="bg-white border border-slate-300  px-4 py-2 rounded-md"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                            {/* Quiz summary */}
-                            <div className="w-full  bg-white/80 dark:bg-slate-800/80 border border-slate-200 p-6 shadow-sm mx-auto rounded-lg">
-                                <h2 className="text-2xl font-bold mb-4">Quiz Summary</h2>
-                                <div className="flex justify-between items-start text-sm">
-                                    <div className="space-y-2">
-                                        <p><strong>Title:</strong> {quizInfo.quizTitle}</p>
-                                        <p><strong>Subject:</strong> {quizInfo.quizSubject}</p>
-                                        <p><strong>Validity:</strong> {quizInfo.endless ? 'Endless' : quizInfo.endDate ? new Date(quizInfo.endDate).toLocaleDateString() : 'Not set'}</p>
-                                    </div>
-                                    <div className='space-y-2'>
-                                        <p><strong>Total Questions:</strong> {questions.length}</p>
-                                        <p><strong>Total Marks:</strong> {questions.reduce((total, q) => total + (q.marks), 0)}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        // {/* Quiz Creation Section */ }
-                        < div className="lg:col-span-2 2xl:col-span-1">
-                            <div className="w-full">
-                                <div className="grid grid-cols-3 bg-slate-200/50  shadow-md rounded-2xl mb-6">
-                                    {tabs.map((tab, idx) => (
-                                        <div key={tab.key}
-                                            className={`flex items-center cursor-pointer transition-colors delay-100 duration-200 text-sm ${activeTab === tab.key ? 'bg-[#FF5F1F] text-white' : ' text-slate-500 '} py-2 px-2 md:px-4 space-x-2 ${idx == 0 ? ' rounded-l-2xl' : idx == 2 ? 'rounded-r-2xl' : ''}`}
-                                            onClick={() => setActiveTab(tab.key)}
-                                        >
-                                            <tab.icon className='hidden sm:block w-4 h-4' />
-                                            <span>{tab.label}</span>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div className="space-y-6">
-                                    {tabs.find((tab) => tab.key == activeTab)?.component || <ManualCreation onAddQuestion={addQuestion} />}
-                                </div>
-
-                            </div>
-                        </div>
-                    )}
-                    {/* Question Preview Section */}
-                    <div className="lg:col-span-1">
-                        <QuizPreview
-                            finalise={finalise}
-                            setFinalise={setFinalise}
-                            questions={questions}
-                            onUpdateQuestion={updateQuestion}
-                            onRemoveQuestion={removeQuestion}
-                        />
+                {isLarge ? (
+                    <PanelGroup direction="horizontal" className="gap-1">
+                        <Panel defaultSize={65} minSize={40}>
+                            {LeftContent}
+                        </Panel>
+                        <PanelResizeHandle className="flex items-center justify-center hover:bg-slate-200/20 rounded-full dark:hover:bg-slate-700/50">
+                            <GripVertical className="w-4 h-4 text-slate-400" />
+                        </PanelResizeHandle>
+                        <Panel minSize={30} className="">
+                            {RightContent}
+                        </Panel>
+                    </PanelGroup>
+                ) : (
+                    <div className={`flex flex-col gap-6`}>
+                        {LeftContent}
+                        {RightContent}
                     </div>
-                </div>
-            </main >
+                )}
+            </main>
         </>
     );
 }

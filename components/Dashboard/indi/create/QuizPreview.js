@@ -1,55 +1,9 @@
 "use client"
 
-import { useState } from "react"
-import { Edit, Trash2, Save, X, CheckCircle, PenTool, Brain, Upload } from "lucide-react"
-import QuestionPreview from "./QuestionPreview"
+import { CheckCircle } from "lucide-react"
+import { QuestionPreview } from "./QuestionPreview"
 
 export function QuizPreview({ questions, onUpdateQuestion, onRemoveQuestion, setFinalise, finalise }) {
-    const [editingId, setEditingId] = useState(null)
-    const [editingQuestion, setEditingQuestion] = useState(null)
-    const [errors, setErrors] = useState({});
-
-    const validateQuestion = () => {
-        const newerrors = {};
-        if( editingQuestion?.isCode && (!editingQuestion.questionText.beforeCode?.trim() || !editingQuestion.questionText.codePart?.trim() || !editingQuestion.questionText.afterCode?.trim())) {
-            newerrors.questionText = "Question is required.";
-        }
-        else if (!editingQuestion.questionText?.codePart && !editingQuestion.questionText?.trim()) {
-            newerrors.questionText = "Question is required.";
-        }
-        if (!editingQuestion.options.every(opt => typeof opt === 'string' && opt.trim() !== '')) {
-            newerrors.options = "Option cannot be empty.";
-        }
-        if (!(editingQuestion.correctAnswer + 1)) {
-            newerrors.correctAnswer = "Correct answer is required.";
-        }
-        if (!editingQuestion.marks) {
-            newerrors.marks = "Marks are required.";
-        }
-        setErrors(newerrors);
-        return Object.keys(newerrors).length === 0;
-    }
-
-    const handleEdit = (question) => {
-        setEditingId(question.id)
-        setEditingQuestion({ ...question })
-    }
-
-    const handleSave = () => {
-        if (editingQuestion && editingId) {
-            if (!validateQuestion()) return;
-            onUpdateQuestion(editingId, editingQuestion)
-            setEditingId(null)
-            setEditingQuestion(null)
-        }
-    }
-
-    const handleCancel = () => {
-        setEditingId(null)
-        setEditingQuestion(null)
-    }
-
-
 
     return (
         <div className="sticky top-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm">

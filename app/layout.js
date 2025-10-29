@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       {/* <body className="bg-gradient-to-b from-gray-100 to-orange-200"> */}
-      <body className="text-neutral-800 dark:text-[#e3e3e3]">
+      <body className="text-neutral-800  dark:text-[#e3e3e3] bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
         <SessionWrapper>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
         <ToastContainer
@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
                 theme="light"
                 style={{zIndex:100}}
               />
-          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800  ">
+          <div className="min-h-screen  bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800  ">
           {/* <MainNavbar /> */}
       {/* <Suspense fallback={<Loading />}> */}
         {children}

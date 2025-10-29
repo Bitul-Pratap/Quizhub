@@ -1,12 +1,205 @@
 import React, { useState } from 'react';
-import { Edit, Trash2, Save, X } from 'lucide-react';
+import { Edit, Trash2, Save, X, Plus, Minus } from 'lucide-react';
 
 
-export default function QuestionPreview({ question, index, isPreview=false, setGeneratedQuestions=null, setMarksError=null, updateQuestion=null, removeQuestion=null }) {
+export const SegmentRenderer = ({ segment, isPreview = false, isEditing = false, isAttempting = false, changeHandler = null }) => {
+    switch (segment.type) {
+
+        case 'text':
+            return (
+                <div className="">
+                    {isEditing ? (
+                        <textarea
+                            value={segment.content}
+                            onChange={changeHandler}
+                            placeholder='Enter text here...'
+                            className="ringOut-Set ringOut-var-1 w-full px-3 py-2 border  border-slate-200 dark:border-slate-700 dark:bg-transparent/20 rounded-md text-sm"
+                        />
+                    ) : (
+                        <p className={`font-medium ${isPreview ? "text-sm" : ""}`} >{segment.content}</p>
+                    )}
+                </div>
+            );
+
+        case 'image':
+            return (
+                <div className="">
+                    {isEditing ? (
+                        <>
+                            <label
+                                htmlFor="file-upload"
+                                className="inline-block px-2 py-1 text-sm border border-slate-200 dark:border-slate-700 rounded bg-white dark:bg-transparent/20 text-slate-700 dark:text-slate-200 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                            >
+                                Choose File
+                            </label>
+                            <input type="file" accept="image/*" onChange={changeHandler} className='hidden' />
+                        </>
+                    ) : (
+                        <img src={segment.content} alt="Question image" className="max-w-full h-auto rounded-md" />
+                    )}
+                </div>
+            );
+        case 'code':
+            return (
+                <div className="font-medium ">
+                    {isEditing ? (
+                        <textarea value={segment.content} placeholder='Enter code here...' onChange={changeHandler} className="ringOut-Set ringOut-var-1 w-full font-mono bg-slate-100 dark:bg-slate-800 px-3 py-2  rounded-md text-sm" />
+                    ) : (
+                        <pre className='bg-slate-100 dark:bg-slate-800 p-3 rounded-md overflow-x-auto'>
+                            <code className={`text-sm language-${segment.language}`} >{segment.content}</code>
+                        </pre>
+                    )}
+                </div>
+            );
+        case 'table':
+            const tableData = segment.content;
+            const rows = tableData.split("\n").map(row => row.split("|").map(cell => cell.trim()));
+            const [table, setTable] = useState(rows);
+
+            function handleCellChange(rowIndex, cellIndex, value) {
+                setTable(prevTable => {
+                    const newTable = [...prevTable];
+                    newTable[rowIndex][cellIndex] = value;
+                    return newTable;
+                });
+            }
+            return (
+                <div className="overflow-x-auto pt-4 ">
+                    {isEditing ? (
+                        <>
+                            <table className="w-full table-auto border-collapse border border-slate-200 dark:border-slate-700 ">
+                                <tbody>
+                                    {table.map((row, rowIndex) => (
+                                        <tr key={rowIndex}>
+                                            {row.map((cell, cellIndex) =>
+                                                rowIndex === 0 ? (
+                                                    <th key={cellIndex} className='border border-slate-200 dark:border-slate-700 font-semibold '>
+                                                        <input
+                                                            type="text"
+                                                            value={cell}
+                                                            placeholder='Fill the Cell...'
+                                                            onChange={(e) => handleCellChange(rowIndex, cellIndex, e.target.value)}
+                                                            className="w-full px-3 py-1 text-sm  dark:bg-transparent/20 text-center ringOut-Set ringOut-var-1"
+                                                        />
+                                                    </th>
+                                                ) : (
+                                                    <td key={cellIndex} className='border border-slate-200 dark:border-slate-700'>
+                                                        <input
+                                                            type="text"
+                                                            value={cell}
+                                                            className={`w-full px-3 py-1 text-sm  dark:bg-transparent/20 text-center ringOut-Set ringOut-var-1`}
+                                                            placeholder='Fill the Cell...'
+                                                            onChange={(e) => handleCellChange(rowIndex, cellIndex, e.target.value)}
+                                                        />
+                                                    </td>
+                                                )
+                                            )}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <div className='flex space-x-2 mt-2'>
+                                <button
+                                    onClick={() => setTable([...table, Array(table[0].length).fill('')])}
+                                    className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md"
+                                >
+                                    Row <Plus className="inline h-3 w-3" />
+                                </button>
+                                <button onClick={() => setTable(table.slice(0, -1))} className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md">
+                                    Row <Minus className="inline h-3 w-3" />
+                                </button>
+                                <button onClick={() => setTable(table.map(row => [...row, '']))} className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md">
+                                    Column <Plus className="inline h-3 w-3" />
+                                </button>
+                                <button onClick={() => setTable(table.map(row => row.slice(0, -1)))} className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md">
+                                    Column <Minus className="inline h-3 w-3" />
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        <table className="w-full table-auto border-collapse  border border-slate-200 dark:border-slate-700">
+                            <tbody>
+                                {table.map((row, rowIndex) => (
+                                    <tr key={rowIndex}>
+                                        {row.map((cell, cellIndex) =>
+                                            rowIndex === 0 ? (
+                                                <th className="font-semibold border text-center px-3 py-1" key={cellIndex}>
+                                                    {cell}
+                                                </th>
+                                            ) :
+                                                (
+                                                    <td
+                                                        key={cellIndex}
+                                                        className={`border px-3 py-1 text-center `}>
+                                                        {cell}
+                                                    </td>
+                                                ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+            );
+
+        case 'math':
+            return (
+                <div className="font-medium ">
+                    {isEditing ? (
+                        <textarea value={segment.content} placeholder='Enter math expression...' onChange={changeHandler} className="ringOut-Set ringOut-var-1 w-full px-3 py-2 border rounded-md border-slate-200 dark:border-slate-700 dark:bg-transparent/20 text-sm" />
+                    ) : (
+                        <pre className='bg-slate-100 dark:bg-slate-800 p-3 rounded-md overflow-x-auto'>
+                            <code className={`text-sm language-${segment.language}`} >{segment.content}</code>
+                        </pre>
+                    )}
+                </div>
+            );
+        default:
+            return null;
+    }
+}
+
+export const Toolbar = ({ handleToolbar }) => {
+
+    const toolbar = [
+        { type: "text", label: "Text" },
+        { type: "code", label: "Code" },
+        { type: "image", label: "Image" },
+        { type: "table", label: "Table" },
+        { type: "math", label: "Math" },
+    ]
+
+    return (
+        <div className={`w-fit px-3 py-2 text-sm bg-gradient-to-t from-blue-50/80 to-blue-50/20 dark:from-transparent/50 border dark:border-slate-700 shadow-sm  rounded-md border-blue-200 flex gap-2`}>
+            {toolbar.map((tool, idx) => (
+                <button
+                    key={idx}
+                    onClick={() => handleToolbar(tool.type)}
+                    className="px-1 bg-gradient-to-br from-blue-400 to-blue-700 tracking-tight bg-clip-text text-transparent rounded-md hover:from-blue-500 hover:bg-blue-700 focus:outline-1 focus:outline-offset-2 dark:focus:outline-blue-500 focus:outline-blue-500">
+                    {tool.label}
+                </button>
+            ))}
+        </div>
+    )
+}
+
+export function QuestionPreview({ question, index, isPreview = false, setGeneratedQuestions = null, setMarksError = null, updateQuestion = null, removeQuestion = null }) {
 
     const [isEditing, setIsEditing] = useState(false);
     const [errors, setErrors] = useState({});
     const [editingQuestion, setEditingQuestion] = useState(null);
+
+
+    const handleToolbar = (type) => {
+        const newSegment = { type, content: '', language: 'plaintext' };
+        if (type === 'table') {
+            newSegment.content = "| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |";
+        }
+        setEditingQuestion((prev) => ({
+            ...prev,
+            questionText: [...prev.questionText, newSegment]
+        }));
+    }
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -20,13 +213,19 @@ export default function QuestionPreview({ question, index, isPreview=false, setG
     const validateQuestion = () => {
         const newerrors = {};
 
+        if (!editingQuestion.questionText || editingQuestion.questionText.length === 0 || !editingQuestion.questionText.some(segment => segment.content.trim() !== '')) {
+            newerrors.questionText = "Question text is required.";
+        }
+
         if (!editingQuestion.options.every(opt => typeof opt === 'string' && opt.trim() !== '')) {
             newerrors.options = "Option cannot be empty.";
         }
-        if (!(editingQuestion.correctAnswer + 1)) {
-            newerrors.correctAnswer = "Correct answer is required.";
+        if (!(editingQuestion.correctOption + 1)) {
+            newerrors.correctOption = "Correct answer is required.";
         }
-        if (!editingQuestion.marks) {
+        if (editingQuestion.marks === undefined ||
+            editingQuestion.marks === null ||
+            editingQuestion.marks === "") {
             newerrors.marks = "Marks are required.";
         }
 
@@ -42,7 +241,9 @@ export default function QuestionPreview({ question, index, isPreview=false, setG
     const handleSave = () => {
         if (isEditing) {
             if (!validateQuestion()) return;
-            isPreview? updateQuestion(editingQuestion.id, editingQuestion):setMarksError((prev) => prev.filter((id) => id !== editingQuestion.id));  handleUpdateQuestion(editingQuestion.id, editingQuestion);
+            const filteredQuestion = editingQuestion.questionText.filter(segment => segment.content.trim() !== '');
+            setEditingQuestion({ ...editingQuestion, questionText: filteredQuestion });
+            isPreview ? updateQuestion(editingQuestion.id, editingQuestion) : (setMarksError((prev) => prev.filter((id) => id !== editingQuestion.id)), handleUpdateQuestion(editingQuestion.id, editingQuestion));
             setIsEditing(false);
         }
     }
@@ -58,10 +259,10 @@ export default function QuestionPreview({ question, index, isPreview=false, setG
     return (
         <div className="p-6 pt-4">
             <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                    <h4 className="font-medium text-sm text-slate-600 dark:text-slate-400"> {isPreview?"Q":"Question"} {index + 1}</h4>
-                    <span className={`px-2.5 py-0.5 rounded-full ${isPreview ? "text-xs" : "text-sm"} text-slate-500 dark:text-slate-400 bg-slate-100 font-semibold dark:bg-slate-800`}>
-                        {question.marks === undefined ? "No marks assigned" : `${question.marks} marks`}
+                <div className="flex flex-wrap items-center gap-2">
+                    <h4 className="font-medium text-sm text-slate-600 dark:text-slate-400"> {isPreview ? "Q" : "Question"} {index + 1}</h4>
+                    <span className={`px-2.5 py-0.5 rounded-full ${isPreview ? "text-xs" : "text-xs sm:text-sm"} text-slate-500 dark:text-slate-400 bg-slate-100 font-semibold dark:bg-slate-800 `}>
+                        {(question.marks === null || question.marks === undefined) ? "No marks assigned" : `${question.marks} marks`}
                     </span>
                 </div>
                 <div className="flex space-x-1">
@@ -76,7 +277,7 @@ export default function QuestionPreview({ question, index, isPreview=false, setG
                     </button>
                     <button
                         className="px-3 h-9 rounded-md text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
-                        onClick={() => isPreview? removeQuestion(question.id):  handleRemoveQuestion(index)}
+                        onClick={() => isPreview ? removeQuestion(question.id) : handleRemoveQuestion(index)}
                         type="button"
                     >
                         <Trash2 className="h-4 w-4" />
@@ -86,31 +287,45 @@ export default function QuestionPreview({ question, index, isPreview=false, setG
 
             {isEditing ? (
                 <div className="space-y-3">
-                    {(editingQuestion.questionText.map((segment, index) => {
-                        return (
-                            <div key={index} className="flex flex-col space-y-1">
-                                <textarea
-                                    value={segment.value}
-                                    onChange={(e) => {
-                                        const newQuestionText = [...editingQuestion.questionText];
-                                        newQuestionText[index] = { ...segment, value: e.target.value };
-                                        setEditingQuestion({ ...editingQuestion, questionText: newQuestionText });
-                                    }}
-                                    className="w-full px-3 py-2 border rounded-md text-sm whitespace-pre-line"
-                                    placeholder="Enter question here...">
-                                    {segment.value}
-                                </textarea>
-                            </div>
-                        )
-                    }))}
+                    <div className='space-y-1 relative'>
+                        {(editingQuestion.questionText.map((segment, index) => {
+                            return (
+                                <div className='relative' key={index}>
+                                    <SegmentRenderer
+                                        key={index}
+                                        segment={segment}
+                                        isPreview={isPreview}
+                                        isEditing={isEditing}
+                                        changeHandler={(e) => {
+                                            const newQuestionText = [...editingQuestion.questionText];
+                                            newQuestionText[index] = { ...segment, content: e.target.value };
+                                            setEditingQuestion({ ...editingQuestion, questionText: newQuestionText });
+                                        }}
+                                    />
+                                    <button
+                                        onClick={() => {
+                                            const newQuestionText = editingQuestion.questionText.filter((_, i) => i !== index);
+                                            setEditingQuestion({ ...editingQuestion, questionText: newQuestionText });
+                                        }}
+                                        className='absolute bg-red-500 hover:bg-red-600 dark:bg-red-700 hover:dark:bg-red-600 text-white right-0 top-0 p-1 py-[2px] rounded-tr-md rounded-bl-sm '>
+                                        <X className="h-3 w-3" />
+                                    </button>
+                                </div>
+                            )
+                        }))}
+                    </div>
+
+                    {/* Toolbar */}
+                    <Toolbar handleToolbar={handleToolbar} />
+
 
                     {editingQuestion.options.map((option, optIndex) => (
                         <div key={optIndex} className="flex items-center space-x-2">
                             <input
                                 type="radio"
-                                checked={editingQuestion.correctAnswer === optIndex}
+                                checked={editingQuestion.correctOption === optIndex}
                                 onChange={() =>
-                                    setEditingQuestion({ ...editingQuestion, correctAnswer: optIndex })
+                                    setEditingQuestion({ ...editingQuestion, correctOption: optIndex })
                                 }
                                 className="text-orange-500"
                             />
@@ -122,11 +337,39 @@ export default function QuestionPreview({ question, index, isPreview=false, setG
                                     newOptions[optIndex] = e.target.value
                                     setEditingQuestion({ ...editingQuestion, options: newOptions })
                                 }}
-                                className={`w-full px-3 py-2 border rounded-md ${isPreview ? "text-xs" : "text-sm"}`}
+                                className={`w-full px-3 py-2 border dark:border-slate-700 dark:bg-transparent/10   rounded-md ${isPreview ? "text-xs" : "text-sm"} ringOut-Set ringOut-var-1`}
                                 placeholder={`Option ${optIndex + 1}`}
                             />
+                            {editingQuestion.options.length > 2 && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const newOptions = [...editingQuestion.options]
+                                        newOptions.splice(optIndex, 1)
+                                        setEditingQuestion({ ...editingQuestion, options: newOptions })
+                                    }}
+                                    className="text-[#ef4444] font-bold cursor-pointer"
+                                    title="Remove option"
+                                >
+                                    <Trash2 className='w-4 h-4' />
+                                </button>
+                            )}
                         </div>
                     ))}
+                    {editingQuestion.options.length < 6 && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setEditingQuestion({
+                                    ...editingQuestion,
+                                    options: [...editingQuestion.options, '']
+                                })
+                            }}
+                            className="w-full py-2 mt-2 flex items-center justify-center gap-4 rounded-md border"
+                        >
+                            <Plus className="w-4 h-4 font-bold" /> Add Option
+                        </button>
+                    )}
 
                     <textarea
                         rows={4}
@@ -135,7 +378,7 @@ export default function QuestionPreview({ question, index, isPreview=false, setG
                             setEditingQuestion({ ...editingQuestion, explanation: e.target.value })
                         }
 
-                        className="w-full px-3 py-2 border rounded-md text-sm"
+                        className="ringOut-Set ringOut-var-1 w-full px-3 py-2 border  dark:border-slate-700 dark:bg-transparent/10 rounded-md text-sm"
                         placeholder="Enter explanation here..."
                     />
 
@@ -145,7 +388,7 @@ export default function QuestionPreview({ question, index, isPreview=false, setG
                         onChange={(e) =>
                             setEditingQuestion({ ...editingQuestion, marks: Number(e.target.value) })
                         }
-                        className="w-full px-3 py-2 border rounded-md text-sm"
+                        className="w-full px-3 py-2 border  dark:border-slate-700 dark:bg-transparent/10 rounded-md text-sm ringOut-Set ringOut-var-1"
                         placeholder="Enter marks"
                         min={0}
                     />
@@ -158,8 +401,8 @@ export default function QuestionPreview({ question, index, isPreview=false, setG
                             {errors.options && (
                                 <div>{errors.options}</div>
                             )}
-                            {errors.correctAnswer && (
-                                <div>{errors.correctAnswer}</div>
+                            {errors.correctOption && (
+                                <div>{errors.correctOption}</div>
                             )}
                             {errors.marks && (
                                 <div>{errors.marks}</div>
@@ -187,38 +430,49 @@ export default function QuestionPreview({ question, index, isPreview=false, setG
                 </div>
             ) : (
                 <>
-                    {(question.questionText.map((segment, index) => {
-                        if (segment.type === "image") {
+                    <div className={`mb-4 space-y-1 ${isPreview ? "text-sm" : ""}`}>
+                        {(question.questionText.map((segment, index) => {
                             return (
-                                <div key={index} className="mb-2">
-                                    <img
-                                        src={segment.value}
-                                        alt={`Image ${index + 1}`}
-                                        className="max-w-full h-auto rounded-md"
-                                    />
-                                </div>
+                                <SegmentRenderer
+                                    key={index}
+                                    segment={segment}
+                                    isPreview={isPreview}
+                                    isEditing={isEditing}
+                                />
                             );
-                        }
 
-                        if (segment.type !== "text" && segment.type !== "image") {
-                            return (
-                                <div key={index} className="font-medium mb-2">
-                                    <pre className="bg-slate-100 dark:bg-slate-800 p-3 rounded-md overflow-x-auto">
-                                        <code className={`text-sm language-${segment.lang}`}>{segment.value ?? ""}</code>
-                                    </pre>
-                                </div>
-                            );
-                        } else {
-                            return (
-                                <p key={index} className={`font-medium mb-2 whitespace-pre-line ${isPreview ? "text-sm" : ""}`}>{segment.value}</p>
-                            );
-                        }
-                    }))}
+                            // if (segment.type === "image") {
+                            //     return (
+                            //         <div key={index} className="mb-2">
+                            //             <img
+                            //                 src={segment.content}
+                            //                 alt={`Image ${index + 1}`}
+                            //                 className="max-w-full h-auto rounded-md"
+                            //             />
+                            //         </div>
+                            //     );
+                            // }
+
+                            // if (segment.type !== "text" && segment.type !== "image") {
+                            //     return (
+                            //         <div key={index} className="font-medium mb-2">
+                            //             <pre className="bg-slate-100 dark:bg-slate-800 p-3 rounded-md overflow-x-auto">
+                            //                 <code className={`text-sm language-${segment.lang}`}>{segment.content ?? ""}</code>
+                            //             </pre>
+                            //         </div>
+                            //     );
+                            // } else {
+                            //     return (
+                            //         <p key={index} className={`font-medium mb-2 whitespace-pre-line ${isPreview ? "text-sm" : ""}`}>{segment.content}</p>
+                            //     );
+                            // }
+                        }))}
+                    </div>
                     <div className={`space-y-1 ${isPreview ? "text-xs" : "text-sm"}`}>
                         {question.options.map((option, optIndex) => (
                             <div
                                 key={optIndex}
-                                className={`p-2 rounded whitespace-pre-line ${optIndex === question.correctAnswer
+                                className={`p-2 rounded whitespace-pre-line ${optIndex === question.correctOption
                                     ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300"
                                     : "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                                     }`}

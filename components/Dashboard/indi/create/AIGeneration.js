@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Brain, Sparkles, Plus, X } from "lucide-react"
 import { toast, Bounce } from "react-toastify";
-import QuestionPreview from "./QuestionPreview";
+import { QuestionPreview } from "./QuestionPreview";
 
 
 const Popup = ({ show, onClose, children }) => {
@@ -141,76 +141,85 @@ export function AIGeneration({ onAddMultipleQuestions }) {
                     <div className="flex items-center space-x-2 text-2xl leading-none tracking-tight font-semibold">
                         <Brain className="h-5 w-5 text-purple-600 flex-shrink-0" />
                         <span>AI-Powered Quiz Generation</span>
-                        <span className="hidden sm:block ml-2 px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 text-xs font-semibold">New</span>
+                        <span className="hidden sm:block ml-2 px-2.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-100 text-purple-700 dark:text-purple-500 text-xs font-semibold">New</span>
                     </div>
                 </div>
                 <div className="p-6 pt-0 space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label htmlFor="topic" className="block text-sm leading-none font-medium">Topic</label>
-                            <input
-                                id="topic"
-                                className="w-full h-10 text-sm border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-800"
-                                placeholder="e.g., JavaScript, History, Biology"
-                                disabled={customEnabled}
-                                value={topic}
-                                onChange={(e) => setTopic(e.target.value)}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label htmlFor="difficulty" className="block text-sm leading-none font-medium">Difficulty</label>
-                            <select
-                                id="difficulty"
-                                className="w-full h-10 flex items-center justify-between text-sm border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-800"
-                                value={difficulty}
-                                disabled={customEnabled}
-                                onChange={(e) => setDifficulty(e.target.value)}
-                            >
-                                <option value="">Select difficulty</option>
-                                <option value="easy">Easy</option>
-                                <option value="medium">Medium</option>
-                                <option value="hard">Hard</option>
-                            </select>
-                        </div>
+                    <div className="group flex items-center mb-6 border-[1.4px] border-t-0 shadow dark:shadow-purple-800/40 w-fit rounded-b-full bg-gradient-to-t from-purple-200/60 dark:from-transparent/40 to-purple-50 border-purple-400 dark:border-purple-700 ">
+                        <button 
+                            className="px-4 py-1 text-sm text-purple-800 dark:text-purple-400 hover:bg-purple-200/50 dark:hover:bg-purple-900/40 rounded-bl-full"
+                            onClick={() => setCustomEnabled(false)}>
+                            Guided
+                        </button>
+                        <span className="text-sm bg-purple-200 dark:bg-purple-700/50 rounded-full w-[1.4px] h-3.5 group-hover:h-7 transition-all duration-100"></span>
+                        <button 
+                            className="px-4 py-1 text-sm text-purple-800 dark:text-purple-400 hover:bg-purple-200/50 dark:hover:bg-purple-900/40 rounded-br-full "
+                            onClick={() => setCustomEnabled(true)}>
+                            Custom
+                        </button>
                     </div>
-                    <div className="space-y-2">
-                        <label htmlFor="numQuestions" className="block text-sm leading-none font-medium">Number of Questions</label>
-                        <select
-                            id="numQuestions"
-                            className="w-full h-10 text-sm border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-800"
-                            value={numQuestions}
-                            disabled={customEnabled}
-                            onChange={(e) => setNumQuestions(e.target.value)}
-                        >
-                            <option value="3">3 Questions</option>
-                            <option value="5">5 Questions</option>
-                            <option value="10">10 Questions</option>
-                            <option value="15">15 Questions</option>
-                        </select>
-                    </div>
+                    {!customEnabled ? (
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label htmlFor="topic" className="block text-sm leading-none font-medium">Topic</label>
+                                    <input
+                                        id="topic"
+                                        className="ringOut-Set w-full h-10 text-sm border rounded-md px-3 py-2 dark:bg-transparent/20 border-slate-200 dark:border-purple-700  focus:ring-purple-400 dark:focus:ring-purple-500 dark:focus:ring-offset-purple-950 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                                        placeholder="e.g., JavaScript, History, Biology"
+                                        disabled={customEnabled}
+                                        value={topic}
+                                        onChange={(e) => setTopic(e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label htmlFor="difficulty" className="block text-sm leading-none font-medium">Difficulty</label>
+                                    <select
+                                        id="difficulty"
+                                        className="w-full h-10 flex items-center justify-between text-sm border rounded-md px-3 py-2 dark:bg-slate-900/60 border-slate-200 dark:border-purple-700 ringOut-Set focus:ring-purple-400  dark:focus:ring-offset-purple-900 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-800  "
+                                        value={difficulty}
+                                        disabled={customEnabled}
+                                        onChange={(e) => setDifficulty(e.target.value)}
+                                    >
+                                        <option value="">Select difficulty</option>
+                                        <option value="easy">Easy</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="hard">Hard</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label htmlFor="numQuestions" className="block text-sm leading-none font-medium">Number of Questions</label>
+                                <select
+                                    id="numQuestions"
+                                    className="w-full h-10 text-sm border rounded-md px-3 py-2 dark:bg-slate-900/60 border-slate-200 dark:border-purple-700 ringOut-Set dark:focus:ring-offset-purple-900 focus:ring-purple-400 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-800"
+                                    value={numQuestions}
+                                    disabled={customEnabled}
+                                    onChange={(e) => setNumQuestions(e.target.value)}
+                                >
+                                    <option value="3">3 Questions</option>
+                                    <option value="5">5 Questions</option>
+                                    <option value="10">10 Questions</option>
+                                    <option value="15">15 Questions</option>
+                                </select>
+                            </div>
+                        </>
+                    ) : (
 
-                    <div className="mt-4">
-                        <div className="flex items-center space-x-2 mb-2">
-                            <input
-                                type="checkbox"
-                                id="customEnabled"
-                                name="customEnabled"
-                                checked={customEnabled}
-                                className="cursor-pointer scale-90"
-                                onChange={(e) => setCustomEnabled(e.target.checked)}
-                            />
-                            <span className="text-sm text-slate-600 dark:text-slate-400">Want to use your own custom prompt? (Full flexibility)</span>
-                        </div>
-                        <div className={`space-y-2 ${customEnabled ? 'block' : 'hidden'}`}>
-                            <textarea
-                                className={`w-full border rounded-md text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 ${customEnabled ? '' : 'hidden'}`}
-                                rows="4"
-                                value={customPrompt}
-                                onChange={(e) => setCustomPrompt(e.target.value)}
-                                placeholder="Enter your custom prompt here..."
-                            />
-                        </div>
-                    </div>
+                            <div className={`space-y-2`}>
+                                <label htmlFor="customPrompt" className="block text-sm leading-none font-medium">Custom Prompt</label>
+                                <textarea
+                                    className={`w-full border rounded-md text-sm px-3 py-2 dark:bg-transparent/20 border-slate-200 dark:border-purple-700  focus:ring-purple-300 dark:focus:ring-purple-500`}
+                                    rows="4"
+                                    value={customPrompt}
+                                    onChange={(e) => setCustomPrompt(e.target.value)}
+                                    placeholder="Enter your custom prompt here..."
+                                />
+                                <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
+                                    Use this field to provide a custom prompt for AI to generate questions.
+                                </p>
+                            </div>
+                    )}
 
                     <button
                         onClick={handleGenerate}
@@ -237,16 +246,16 @@ export function AIGeneration({ onAddMultipleQuestions }) {
 
             {/* Loading State */}
             {isGenerating && (
-                <div className="rounded-lg border shadow-sm">
+                <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 shadow-sm">
                     <div className="p-6">
                         <div className="text-xl font-semibold">Generating Questions...</div>
                     </div>
                     <div className="p-6 pt-0 space-y-4">
                         {Array.from({ length: Number.parseInt(numQuestions) }).map((_, i) => (
                             <div key={i} className="space-y-2">
-                                <div className="h-4 w-3/4 bg-slate-200 rounded animate-pulse" />
-                                <div className="h-3 w-1/2 bg-slate-200 rounded animate-pulse" />
-                                <div className="h-3 w-2/3 bg-slate-200 rounded animate-pulse" />
+                                <div className="h-4 w-3/4 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />
+                                <div className="h-3 w-1/2 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />
+                                <div className="h-3 w-2/3 bg-slate-200 dark:bg-slate-700 rounded animate-pulse" />
                             </div>
                         ))}
                     </div>
@@ -255,11 +264,11 @@ export function AIGeneration({ onAddMultipleQuestions }) {
 
             {/* Preview Generated Questions */}
             {showPreview && generatedQuestions?.length > 0 && (
-                <div className="rounded-lg border bg-white shadow-sm">
+                <div className="rounded-lg border bg-white dark:bg-slate-900 dark:border-slate-700 shadow-sm">
                     <div className="p-6 ">
                         <div className="flex items-center justify-between text-xl font-semibold">
-                            <span>Generated Questions Preview</span>
-                            <span className="px-2.5 py-0.5 rounded-full font-semibold border text-xs">{generatedQuestions.length} questions</span>
+                            <span className="leading-tight sm:leading-normal">Generated Questions Preview</span>
+                            <span className="px-2.5 py-0.5 rounded-full font-semibold border dark:border-slate-700 text-xs">{generatedQuestions.length} questions</span>
                         </div>
                     </div>
                     <div className="p-6 pt-0 space-y-4">
