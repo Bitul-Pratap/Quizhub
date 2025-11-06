@@ -14,7 +14,8 @@ export function ManualCreation({ onAddQuestion }) {
     const [marks, setMarks] = useState(0);
     const [errors, setErrors] = useState({})
 
-    const handleToolbar = (type) => {
+    const handleToolbar = (e, type) => {
+        e.preventDefault();
         const newSegment = { type, content: '', language: (type === 'code' && "plaintext") };
         if (type === 'table') {
             newSegment.content = "| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |";

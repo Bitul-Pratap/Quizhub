@@ -202,7 +202,7 @@ const CreateQuiz = () => {
         finalise ? (
             <div className='grid grid-rows-none gap-6' >
                 {/* Quiz Info */}
-                < div className="bg-white/80 w-full dark:bg-slate-800/80 border border-slate-200 p-6 shadow-sm mx-auto rounded-lg " >
+                < div className="bg-white/80 w-full dark:text-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 p-6 shadow-sm mx-auto rounded-lg " >
                     <div className='space-y-1 mb-4'>
                         <h2 className="text-2xl font-bold" >Quiz Info</h2>
                         <p className="text-slate-600 text-sm dark:text-slate-400">
@@ -218,7 +218,7 @@ const CreateQuiz = () => {
                             value={quizInfo.quizTitle}
                             onChange={handleChange}
                             placeholder="Enter quiz title"
-                            className="w-full p-2 text-sm border border-[#ccc] rounded-md"
+                            className="w-full p-2 ringOut-Set ringOut-var-1 text-sm border border-slate-200 dark:border-slate-700 dark:bg-transparent/20 rounded-md"
                         />
                         {errors.quizTitle && (
                             <div className="text-red-500 text-xs mt-1">{errors.quizTitle}</div>
@@ -233,7 +233,7 @@ const CreateQuiz = () => {
                             value={quizInfo.quizSubject}
                             onChange={handleChange}
                             placeholder="Enter subject"
-                            className="w-full p-2 text-sm border border-[#ccc] rounded-md"
+                            className="w-full p-2 ringOut-Set ringOut-var-1 text-sm border border-slate-200 dark:border-slate-700 dark:bg-transparent/20 rounded-md"
                         />
                         {errors.quizSubject && (
                             <div className="text-red-500 text-xs mt-1">{errors.quizSubject}</div>
@@ -263,7 +263,7 @@ const CreateQuiz = () => {
                                 disabled={quizInfo.endless}
                                 onChange={handleChange}
                                 placeholder="Enter validity (e.g., dd/mm/yyyy)"
-                                className="w-full p-2 text-sm border border-[#ccc] disabled:bg-gray-200 rounded-md"
+                                className="w-full ringOut-Set ringOut-var-1 p-2 text-sm border border-slate-200 dark:border-slate-700 dark:bg-transparent/20 disabled:bg-gray-200 rounded-md"
                             />
                         </div>
                         {errors.quizValidity && (
@@ -282,14 +282,14 @@ const CreateQuiz = () => {
                         <button
                             type="button"
                             onClick={handleCancel}
-                            className="bg-white border border-slate-300  px-4 py-2 rounded-md"
+                            className="bg-white border border-slate-300  text-black px-4 py-2 rounded-md"
                         >
                             Cancel
                         </button>
                     </div>
                 </div >
                 {/* Quiz summary */}
-                < div className="w-full  bg-white/80 dark:bg-slate-800/80 border border-slate-200 p-6 shadow-sm mx-auto rounded-lg" >
+                < div className="w-full dark:text-white bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 p-6 shadow-sm mx-auto rounded-lg" >
                     <h2 className="text-2xl font-bold mb-4">Quiz Summary</h2>
                     <div className="flex justify-between items-start text-sm">
                         <div className="space-y-2">
