@@ -196,7 +196,7 @@ export const Toolbar = ({ handleToolbar }) => {
             {toolbar.map((tool, idx) => (
                 <button
                     key={idx}
-                    onClick={() => handleToolbar(tool.type)}
+                    onClick={(e) => handleToolbar(e, tool.type)}
                     className="px-1 bg-gradient-to-br from-blue-400 to-blue-700 tracking-tight bg-clip-text text-transparent rounded-md hover:from-blue-500 hover:bg-blue-700 focus:outline-1 focus:outline-offset-2 dark:focus:outline-blue-500 focus:outline-blue-500">
                     {tool.label}
                 </button>
@@ -212,7 +212,8 @@ export function QuestionPreview({ question, index, isPreview = false, setGenerat
     const [editingQuestion, setEditingQuestion] = useState(null);
 
 
-    const handleToolbar = (type) => {
+    const handleToolbar = (e, type) => {
+        e.preventDefault();
         const newSegment = { type, content: '', language: 'plaintext' };
         if (type === 'table') {
             newSegment.content = "| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |";
@@ -315,7 +316,7 @@ export function QuestionPreview({ question, index, isPreview = false, setGenerat
 
             {isEditing ? (
                 <div className="space-y-3">
-                    <div className='space-y-1 relative'>
+                    <div className='space-y-2 relative'>
                         {(editingQuestion.questionText.map((segment, index) => {
                             return (
                                 <div className='relative' key={index}>
