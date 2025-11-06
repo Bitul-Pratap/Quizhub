@@ -25,8 +25,21 @@ const CreateQuiz = () => {
     });
 
     function convertToMongoDate(inputDate) {
-        const [day, month, year] = inputDate.split('/').map(Number); // Split and convert to numbers
-        return new Date(year, month - 1, day); // Month is 0-indexed
+        if (typeof inputDate !== 'string') {
+            throw new Error('inputDate must be a string like "YYYY/MM/DD"');
+        }
+        // console.log("Converting date:", inputDate);
+        const parts = inputDate.trim().split('-').map(Number);
+        // console.log(parts)
+        if (parts.length !== 3 || parts.some(isNaN)) {
+            throw new Error('Invalid date format — expected "YYYY-MM-DD"');
+        }
+        const [year, month, day] = parts;
+        if (month < 1 || month > 12 || day < 1 || day > 31) {
+            throw new Error('Invalid month or day');
+        }
+        // Use UTC so stored MongoDB Date is consistent across timezones
+        return new Date(Date.UTC(year, month - 1, day));
     }
 
     const handleChange = (e) => {
@@ -65,7 +78,6 @@ const CreateQuiz = () => {
         if (!validateForm()) {
             return;
         }
-
         const userId = await getUserId(session.user.email);
         const quizData = {
             creater: userId,
@@ -82,9 +94,10 @@ const CreateQuiz = () => {
             })),
         };
 
-        console.log('Quiz Data:', quizData);
+        // console.log('Quiz Data:', quizData);
 
         const quiz = await storeQuizData(quizData);
+        // console.log('Quiz creation response:', quiz);
 
         if (!quiz.success) {
             toast.error('Failed to create quiz. Please try again.', {
@@ -146,9 +159,9 @@ const CreateQuiz = () => {
 
     const addQuestion = (question) => {
         setQuestions((prev) => [...prev, { ...question, id: Date.now().toString() }])
-        setTimeout(() => {
-            console.log("Question added:", question);
-        }, 2000);
+        // setTimeout(() => {
+        //     console.log("Question added:", question);
+        // }, 2000);
     }
 
     const updateQuestion = (id, updatedQuestion) => {
@@ -282,7 +295,7 @@ const CreateQuiz = () => {
                         <div className="space-y-2">
                             <p><strong>Title:</strong> {quizInfo.quizTitle}</p>
                             <p><strong>Subject:</strong> {quizInfo.quizSubject}</p>
-                            <p><strong>Validity:</strong> {quizInfo.endless ? 'Endless' : quizInfo.endDate ? new Date(quizInfo.endDate).toLocaleDateString() : 'Not set'}</p>
+                            <p><strong>Validity:</strong> {quizInfo.endless ? 'Endless' : quizInfo.endDate ? new Date(quizInfo.endDate).toLocaleDateString('In') : 'Not set'}</p>
                         </div>
                         <div className='space-y-2'>
                             <p><strong>Total Questions:</strong> {questions.length}</p>
@@ -557,4 +570,4 @@ export default CreateQuiz;
 //     <button type="submit" className="bg-[#FF4F1F] hover:bg-[#e64400] text-white w-20 h-9 rounded-md">
 //         Submit
 //     </button>
-// </form> 
+// </form>

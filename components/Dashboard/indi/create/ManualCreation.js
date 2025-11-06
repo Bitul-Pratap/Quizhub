@@ -17,7 +17,7 @@ export function ManualCreation({ onAddQuestion }) {
     const handleToolbar = (type) => {
         const newSegment = { type, content: '', language: (type === 'code' && "plaintext") };
         if (type === 'table') {
-            newSegment.value = "| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |";
+            newSegment.content = "| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |";
         }
         setQuestionText((prev) => ([
             ...prev,
@@ -25,17 +25,20 @@ export function ManualCreation({ onAddQuestion }) {
         ]));
     }
 
-    const handleSegmentChange = (index, e) => {
+    const handleSegmentChange = (segment, value, index, e) => {
+        // console.log(`Segment: ${JSON.stringify(segment)}, Value: ${value}, Index: ${index}, Event: ${e}`);
         const newQuestionText = [...questionText];
         newQuestionText[index] = {
             ...newQuestionText[index],
-            content: e.target.value
+            content: segment.type !== 'table' ? e.target.value : value
         }
+        // console.log("Updated Question Text:", newQuestionText);
         setQuestionText(newQuestionText);
     }
 
     const validate = () => {
         const errs = {}
+        // console.log("Validating...", { questionText, options, correctOption })
         if (!questionText || questionText.length === 0 || !questionText.some((seg) => seg.content.trim())) errs.questionText = "Question is required."
         if (options.some((opt) => !opt.trim())) errs.options = "All options are required."
         if (options.length < 2) errs.options = "At least 2 options are required."
@@ -81,7 +84,7 @@ export function ManualCreation({ onAddQuestion }) {
                 marks: Number.isNaN(Number.parseInt(marks)) ? undefined : Number.parseInt(marks),
                 source: "manual",
             }
-            console.log(newQuestion)
+            // console.log(newQuestion)
             onAddQuestion(newQuestion)
             setQuestionText([
                 { type: "text", content: "" },
@@ -101,7 +104,7 @@ export function ManualCreation({ onAddQuestion }) {
                 <div className="space-y-2 relative">
                     {questionText.map((segment, index) => (
                         <div className="relative" key={index}>
-                            <SegmentRenderer segment={segment} isEditing={true} changeHandler={(e) => handleSegmentChange(index, e)} />
+                            <SegmentRenderer segment={segment} isEditing={true} changeHandler={(e, value) => handleSegmentChange(segment, value, index, e)} />
                             <button
                                 onClick={() => {
                                     const newQuestionText = questionText.filter((_, i) => i !== index);

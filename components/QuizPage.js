@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { SegmentRenderer } from '@/components/Dashboard/indi/create/QuestionPreview';
+import QuizPageNav from './QuizPageNav.js';
 
 const QuizAttemptPage = ({ quizData }) => {
     const router = useRouter();
@@ -164,7 +165,7 @@ const QuizAttemptPage = ({ quizData }) => {
         }
         }
         catch(err){
-            console.log(err);
+            // console.log(err);
         }
         setUser(userData);
     };
@@ -189,8 +190,9 @@ const QuizAttemptPage = ({ quizData }) => {
                 theme="light"
                 toastStyle={{ background: "#FF5F1F", width: "100%" }}
             />
-            <div className="flex flex-col items-center justify-center text-neutral-800 dark:text-[#e3e3e3]  px-5 py-10 sm:p-10 min-h-screen dark:from-slate-700 dark:to-slate-900 bg-gradient-to-b from-orange-100 to-orange-300">
-                <div className="bg-white dark:bg-slate-700 dark:border dark:border-slate-600 dark:shadow-slate-900 shadow-lg rounded-xl p-8 w-full max-w-xl">
+            <QuizPageNav />
+            <div className="flex flex-col items-center justify-center text-neutral-800 dark:text-[#e3e3e3]  px-5 py-10 sm:p-10 min-h-screen dark:from-slate-900 dark:to-slate-900 bg-gradient-to-b from-orange-100 to-orange-300">
+                <div className="bg-white dark:bg-slate-800 dark:border dark:border-slate-700 dark:shadow-slate-950 shadow-lg rounded-xl p-8 w-full max-w-xl">
                     <h3 className="text-2xl font-bold text-center text-[#FF5F1F] mb-4">{quizData.title}</h3>
                     <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
                         Enter your email to start attempting the quiz.
@@ -232,8 +234,9 @@ const QuizAttemptPage = ({ quizData }) => {
                 theme="light"
                 toastStyle={{ background: "#FF5F1F" }}
             />
+            <QuizPageNav />
             <div className="min-h-screen text-neutral-800 dark:text-[#e3e3e3]  bg-gradient-to-b from-gray-200 to-gray-300  dark:from-slate-900 dark:to-slate-900 sm:p-6">
-                <div className="bg-white min-h-screen xl:min-h-full relative dark:bg-slate-800 border border-zinc-300 dark:border-slate-700  shadow-xl dark:shadow-slate-950 rounded-lg transition-all duration-500 max-w-4xl xl:max-w-6xl mx-auto p-8">
+                <div className="bg-white min-h-screen xl:min-h-full relative dark:bg-slate-800 sm:border border-zinc-300 dark:border-slate-700  shadow-xl dark:shadow-slate-950 sm:rounded-lg transition-all duration-500 max-w-4xl xl:max-w-6xl mx-auto p-8">
                     <h3 className="text-2xl font-bold text-center text-[#FF5F1F] mb-6">{quizData.title}</h3>
                     {/* Progress Bar */}
                     <div className="mb-6 sticky top-20 bg-white dark:bg-slate-600 dark:bg-opacity-50 dark:backdrop-blur-md py-2 px-4 sm:p-4 rounded-lg dark:shadow-slate-900 shadow-md border dark:border-slate-600 border-gray-200 z-10">
@@ -262,7 +265,7 @@ const QuizAttemptPage = ({ quizData }) => {
                                 <h4 className="font-semibold">
                                     Q{index + 1}.
                                 </h4>
-                                <div className="flex-1 space-y-4" >
+                                <div className=" overflow-auto space-y-4" >
                                 {question.questionText.map((segment, segIndex) => (
                                     <SegmentRenderer
                                         key={segIndex}
@@ -277,7 +280,7 @@ const QuizAttemptPage = ({ quizData }) => {
                                     {question.options.map((option, optIndex) => (
                                         <label
                                             key={optIndex}
-                                            className="flex items-center gap-3 p-3 border dark:border-slate-600 border-gray-300 rounded-lg dark:hover:shadow-slate-950 hover:shadow-md transition cursor-pointer bg-slate-700"
+                                            className="flex items-center gap-3 p-3 border dark:border-slate-600 border-gray-300 rounded-lg dark:hover:shadow-slate-950 hover:shadow-md transition cursor-pointer dark:bg-slate-700"
                                         >
                                             <input
                                                 type="radio"

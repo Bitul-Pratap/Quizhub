@@ -5,7 +5,6 @@ import { ThemeProvider } from "next-themes";
 import { Suspense } from "react";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ThemeColorUpdater from "@/components/ThemeColorUpdater";
 
 
 
@@ -23,7 +22,7 @@ export const metadata = {
     ]
   },
   manifest: "/favicons/site.webmanifest",              // link to web manifest in /public
-  themeColor: "#0f172a",                      // used for mobile browser UI
+  // themeColor: "#0f172a",                      // used for mobile browser UI
   openGraph: {
     title: "Quizhub",
     description: "An online quiz platform to create, share and manage quizzes.",
@@ -56,7 +55,6 @@ export default function RootLayout({ children }) {
       <body className="text-neutral-800  dark:text-[#e3e3e3] bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
         <SessionWrapper>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <ThemeColorUpdater lightColor="#FDFEFE" darkColor="#10172B" /> 
         <ToastContainer
                 position="top-right"
                 autoClose={3000}

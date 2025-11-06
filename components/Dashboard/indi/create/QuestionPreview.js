@@ -1,10 +1,120 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Edit, Trash2, Save, X, Plus, Minus } from 'lucide-react';
 
 
-export const SegmentRenderer = ({ segment, isPreview = false, isEditing = false, isAttempting = false, changeHandler = null }) => {
-    switch (segment.type) {
+const TableHandler = ({ segment, isEditing = false, changeHandler = null }) => {
+    // console.log(segment)
+    const tableData = segment?.content;
+    // console.log(tableData)
+    const rows = tableData?.split("\n").map(row => row.split("|").map(cell => cell.trim()));
+    const [table, setTable] = useState(rows || []);
 
+    // When table state changes, notify parent via changeHandler (runs after render)
+    useEffect(() => {
+        if (!Array.isArray(table) || table.length === 0) return;
+        const newContent = table.map(row => row.join(' | ')).join('\n');
+        if (typeof changeHandler === 'function') {
+            try {
+                changeHandler(null, newContent);
+            } catch (err) {
+                // swallow errors from parent handlers during render lifecycle
+                // console.log('TableHandler changeHandler error:', err);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [table]);
+
+    function handleCellChange(rowIndex, cellIndex, value) {
+        setTable(prevTable => {
+            const newTable = prevTable.map(r => [...r]);
+            newTable[rowIndex][cellIndex] = value;
+            return newTable;
+        });
+    }
+    return (
+        <div className="overflow-x-auto pt-4 ">
+            {isEditing ? (
+                <>
+                    <table className="w-full table-auto border-collapse border border-slate-200 dark:border-slate-700 ">
+                        <tbody>
+                            {table.map((row, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    {row.map((cell, cellIndex) =>
+                                        rowIndex === 0 ? (
+                                            <th key={cellIndex} className='border border-slate-200 dark:border-slate-700 font-semibold '>
+                                                <input
+                                                    type="text"
+                                                    value={cell}
+                                                    placeholder='Fill the Cell...'
+                                                    onChange={(e) => handleCellChange(rowIndex, cellIndex, e.target.value)}
+                                                    className="w-full px-3 py-1 text-sm  dark:bg-transparent/20 text-center ringOut-Set ringOut-var-1"
+                                                />
+                                            </th>
+                                        ) : (
+                                            <td key={cellIndex} className='border border-slate-200 dark:border-slate-700'>
+                                                <input
+                                                    type="text"
+                                                    value={cell}
+                                                    className={`w-full px-3 py-1 text-sm  dark:bg-transparent/20 text-center ringOut-Set ringOut-var-1`}
+                                                    placeholder='Fill the Cell...'
+                                                    onChange={(e) => handleCellChange(rowIndex, cellIndex, e.target.value)}
+                                                />
+                                            </td>
+                                        )
+                                    )}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div className='flex space-x-2 mt-2'>
+                        <button
+                            onClick={() => setTable([...table, Array(table[0].length).fill('')])}
+                            className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md"
+                        >
+                            Row <Plus className="inline h-3 w-3" />
+                        </button>
+                        <button onClick={() => setTable(table.slice(0, -1))} className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md">
+                            Row <Minus className="inline h-3 w-3" />
+                        </button>
+                        <button onClick={() => setTable(table.map(row => [...row, '']))} className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md">
+                            Column <Plus className="inline h-3 w-3" />
+                        </button>
+                        <button onClick={() => setTable(table.map(row => row.slice(0, -1)))} className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md">
+                            Column <Minus className="inline h-3 w-3" />
+                        </button>
+                    </div>
+                </>
+            ) : (
+                <table className="w-full table-auto border-collapse  border border-slate-200 dark:border-slate-600">
+                    <tbody>
+                        {table.map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                {row.map((cell, cellIndex) =>
+                                    rowIndex === 0 ? (
+                                        <th className="font-semibold border border-slate-200 dark:border-slate-600 text-center px-3 py-1" key={cellIndex}>
+                                            {cell}
+                                        </th>
+                                    ) :
+                                        (
+                                            <td
+                                                key={cellIndex}
+                                                className={`border border-slate-200 dark:border-slate-600 px-3 py-1 text-center `}>
+                                                {cell}
+                                            </td>
+                                        ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
+        </div>
+    );
+}
+
+export const SegmentRenderer = ({ segment, isPreview = false, isEditing = false, isAttempting = false, changeHandler = null }) => {
+
+    // console.log(segment);
+    switch (segment.type) {
         case 'text':
             return (
                 <div className="">
@@ -52,95 +162,7 @@ export const SegmentRenderer = ({ segment, isPreview = false, isEditing = false,
                 </div>
             );
         case 'table':
-            const tableData = segment.content;
-            const rows = tableData.split("\n").map(row => row.split("|").map(cell => cell.trim()));
-            const [table, setTable] = useState(rows);
-
-            function handleCellChange(rowIndex, cellIndex, value) {
-                setTable(prevTable => {
-                    const newTable = [...prevTable];
-                    newTable[rowIndex][cellIndex] = value;
-                    return newTable;
-                });
-            }
-            return (
-                <div className="overflow-x-auto pt-4 ">
-                    {isEditing ? (
-                        <>
-                            <table className="w-full table-auto border-collapse border border-slate-200 dark:border-slate-700 ">
-                                <tbody>
-                                    {table.map((row, rowIndex) => (
-                                        <tr key={rowIndex}>
-                                            {row.map((cell, cellIndex) =>
-                                                rowIndex === 0 ? (
-                                                    <th key={cellIndex} className='border border-slate-200 dark:border-slate-700 font-semibold '>
-                                                        <input
-                                                            type="text"
-                                                            value={cell}
-                                                            placeholder='Fill the Cell...'
-                                                            onChange={(e) => handleCellChange(rowIndex, cellIndex, e.target.value)}
-                                                            className="w-full px-3 py-1 text-sm  dark:bg-transparent/20 text-center ringOut-Set ringOut-var-1"
-                                                        />
-                                                    </th>
-                                                ) : (
-                                                    <td key={cellIndex} className='border border-slate-200 dark:border-slate-700'>
-                                                        <input
-                                                            type="text"
-                                                            value={cell}
-                                                            className={`w-full px-3 py-1 text-sm  dark:bg-transparent/20 text-center ringOut-Set ringOut-var-1`}
-                                                            placeholder='Fill the Cell...'
-                                                            onChange={(e) => handleCellChange(rowIndex, cellIndex, e.target.value)}
-                                                        />
-                                                    </td>
-                                                )
-                                            )}
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                            <div className='flex space-x-2 mt-2'>
-                                <button
-                                    onClick={() => setTable([...table, Array(table[0].length).fill('')])}
-                                    className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md"
-                                >
-                                    Row <Plus className="inline h-3 w-3" />
-                                </button>
-                                <button onClick={() => setTable(table.slice(0, -1))} className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md">
-                                    Row <Minus className="inline h-3 w-3" />
-                                </button>
-                                <button onClick={() => setTable(table.map(row => [...row, '']))} className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md">
-                                    Column <Plus className="inline h-3 w-3" />
-                                </button>
-                                <button onClick={() => setTable(table.map(row => row.slice(0, -1)))} className="px-3 py-1 flex items-center gap-1 text-xs border border-slate-200 dark:border-slate-700 rounded-md">
-                                    Column <Minus className="inline h-3 w-3" />
-                                </button>
-                            </div>
-                        </>
-                    ) : (
-                        <table className="w-full table-auto border-collapse  border border-slate-200 dark:border-slate-700">
-                            <tbody>
-                                {table.map((row, rowIndex) => (
-                                    <tr key={rowIndex}>
-                                        {row.map((cell, cellIndex) =>
-                                            rowIndex === 0 ? (
-                                                <th className="font-semibold border text-center px-3 py-1" key={cellIndex}>
-                                                    {cell}
-                                                </th>
-                                            ) :
-                                                (
-                                                    <td
-                                                        key={cellIndex}
-                                                        className={`border px-3 py-1 text-center `}>
-                                                        {cell}
-                                                    </td>
-                                                ))}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-            );
+            return <TableHandler segment={segment} isEditing={isEditing} changeHandler={changeHandler} />;
 
         case 'math':
             return (
@@ -164,7 +186,7 @@ export const Toolbar = ({ handleToolbar }) => {
     const toolbar = [
         { type: "text", label: "Text" },
         { type: "code", label: "Code" },
-        { type: "image", label: "Image" },
+        // { type: "image", label: "Image" },
         { type: "table", label: "Table" },
         { type: "math", label: "Math" },
     ]
@@ -183,7 +205,7 @@ export const Toolbar = ({ handleToolbar }) => {
     )
 }
 
-export function QuestionPreview({ question, index, isPreview = false, setGeneratedQuestions = null, setMarksError = null, updateQuestion = null, removeQuestion = null }) {
+export function QuestionPreview({ question, index, isPreview = false, setGeneratedQuestions = null, updateQuestion = null, removeQuestion = null }) {
 
     const [isEditing, setIsEditing] = useState(false);
     const [errors, setErrors] = useState({});
@@ -243,7 +265,7 @@ export function QuestionPreview({ question, index, isPreview = false, setGenerat
             if (!validateQuestion()) return;
             const filteredQuestion = editingQuestion.questionText.filter(segment => segment.content.trim() !== '');
             setEditingQuestion({ ...editingQuestion, questionText: filteredQuestion });
-            isPreview ? updateQuestion(editingQuestion.id, editingQuestion) : (setMarksError((prev) => prev.filter((id) => id !== editingQuestion.id)), handleUpdateQuestion(editingQuestion.id, editingQuestion));
+            isPreview ? updateQuestion(editingQuestion.id, editingQuestion) : (handleUpdateQuestion(editingQuestion.id, editingQuestion));
             setIsEditing(false);
         }
     }
@@ -254,6 +276,12 @@ export function QuestionPreview({ question, index, isPreview = false, setGenerat
         setErrors({})
     }
 
+    const segmentChangeHandler = (e, value, segment, index) => {
+        // console.log(e, value, segment);
+        const newQuestionText = [...editingQuestion.questionText];
+        newQuestionText[index] = { ...segment, content: segment.type !== 'table' ? e.target.value : value };
+        setEditingQuestion({ ...editingQuestion, questionText: newQuestionText });
+    }
 
 
     return (
@@ -296,11 +324,7 @@ export function QuestionPreview({ question, index, isPreview = false, setGenerat
                                         segment={segment}
                                         isPreview={isPreview}
                                         isEditing={isEditing}
-                                        changeHandler={(e) => {
-                                            const newQuestionText = [...editingQuestion.questionText];
-                                            newQuestionText[index] = { ...segment, content: e.target.value };
-                                            setEditingQuestion({ ...editingQuestion, questionText: newQuestionText });
-                                        }}
+                                        changeHandler={(e, value) => segmentChangeHandler(e, value, segment, index)}
                                     />
                                     <button
                                         onClick={() => {
@@ -365,7 +389,7 @@ export function QuestionPreview({ question, index, isPreview = false, setGenerat
                                     options: [...editingQuestion.options, '']
                                 })
                             }}
-                            className="w-full py-2 mt-2 flex items-center justify-center gap-4 rounded-md border"
+                            className="w-full py-2 mt-2 flex items-center justify-center gap-4 rounded-md border border-slate-200 dark:border-slate-700"
                         >
                             <Plus className="w-4 h-4 font-bold" /> Add Option
                         </button>

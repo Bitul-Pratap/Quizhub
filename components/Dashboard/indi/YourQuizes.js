@@ -147,7 +147,7 @@ const YourQuizes = () => {
     const handleEditQuiz = async (quizId) => {
         setLoadingQData(true);
         const quizData = await fetchQuizData(quizId);
-        console.log(quizData);
+        // console.log(quizData);
         setEditFormData({
             title: quizData.title,
             creater: quizData.creater,
@@ -331,7 +331,7 @@ const YourQuizes = () => {
                 // update only the updated quiz data in quizzes
                 let updatedQuizzes = [...quizzes];
                 if (res?.data) {
-                    res.data.isActive = res.data.endDate ? new Date(res.data.endDate) > today : true;
+                    res.data.isActive = res.data.endDate ? new Date(res.data.endDate) > new Date() : true;
                 }
                 let index = updatedQuizzes.findIndex((quiz) => quiz.quizId === selectedQuiz);
                 updatedQuizzes[index] = { ...updatedQuizzes[index], ...res.data };
@@ -423,27 +423,27 @@ const YourQuizes = () => {
                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                             What would you like to do with the quiz <strong>{selectedQuiz.title}</strong>?
                         </p>
-                        <div className="mt-4 flex sm:flex-row flex-col  sm:justify-end gap-2">
+                        <div className="mt-4 flex sm:flex-row flex-col text-white dark:text-[#e3e3e3] sm:justify-end gap-2">
                             <button
-                                className="bg-teal-500 text-[#e3e3e3] px-4 py-2 rounded shadow hover:bg-teal-600 hover:shadow-lg transition-all"
+                                className="bg-teal-500  px-4 py-2 rounded shadow hover:bg-teal-600 hover:shadow-lg transition-all"
                                 onClick={() => handleShareQuiz(selectedQuiz)}
                             >
                                 Share Quiz
                             </button>
                             <button
-                                className="bg-indigo-500 text-[#e3e3e3] px-4 py-2 rounded shadow hover:bg-indigo-600 hover:shadow-lg transition-all"
+                                className="bg-indigo-500  px-4 py-2 rounded shadow hover:bg-indigo-600 hover:shadow-lg transition-all"
                                 onClick={() => handleEditQuiz(selectedQuiz)}
                             >
                                 Edit Quiz
                             </button>
                             <button
-                                className="bg-amber-500 text-[#e3e3e3] px-4 py-2 rounded shadow hover:bg-amber-600 hover:shadow-lg transition-all"
+                                className="bg-amber-500  px-4 py-2 rounded shadow hover:bg-amber-600 hover:shadow-lg transition-all"
                                 onClick={() => handleTerminateQuiz(selectedQuiz)}
                             >
                                 Terminate Quiz
                             </button>
                             <button
-                                className="bg-rose-500 text-[#e3e3e3] px-4 py-2 rounded shadow hover:bg-rose-600 hover:shadow-lg transition-all"
+                                className="bg-rose-500 px-4 py-2 rounded shadow hover:bg-rose-600 hover:shadow-lg transition-all"
                                 onClick={() => handleDeleteQuiz(selectedQuiz)}
                             >
                                 Remove Quiz
@@ -641,7 +641,7 @@ const YourQuizes = () => {
                 return (
                     <>
                         <h2 className="text-lg font-bold">Confirm Deletion</h2>
-                        <p className="text-sm text-gray-400 mt-2">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                             Are you sure you want to delete the quiz <strong>{selectedQuiz.title}</strong>?
                         </p>
                         <div className="mt-4 flex justify-end gap-2">
@@ -652,7 +652,7 @@ const YourQuizes = () => {
                                 No
                             </button>
                             <button
-                                className="bg-red-500  px-4 py-2 rounded hover:bg-red-600"
+                                className="bg-red-500 text-white dark:inherit  px-4 py-2 rounded hover:bg-red-600"
                                 onClick={handleConfirmDelete}
                             >
                                 Yes, Delete

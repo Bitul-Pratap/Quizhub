@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { getQuizAttemptDetails, getQuizFeedback } from '@/actions/useractions.js';
 import io from 'socket.io-client';
 import { SegmentRenderer } from '@/components/Dashboard/indi/create/QuestionPreview';
-import { AnimatePresence, motion } from 'framer-motion';
+import QuizPageNav from '@/components/QuizPageNav.js';
 
 const ResultPage = ({ quizId, userEmail }) => {
     const [quizResult, setQuizResult] = useState(null);
@@ -85,8 +85,10 @@ const ResultPage = ({ quizId, userEmail }) => {
     }, [quizId, userEmail]);
 
     return (
+        <>
+        <QuizPageNav />
         <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-300 dark:from-slate-900 dark:to-slate-900 text-neutral-800 dark:text-[#e3e3e3] md:p-6">
-            <div className="bg-white dark:bg-slate-800 dark:shadow-slate-900 dark:border dark:border-slate-700 shadow-2xl rounded-lg max-w-4xl min-h-screen xl:min-h-full xl:max-w-6xl mx-auto py-8 px-4 sm:p-8 transition-all duration-500">
+            <div className="bg-white dark:bg-slate-800 dark:shadow-slate-900 dark:border dark:border-slate-700 shadow-2xl md:rounded-lg max-w-4xl min-h-screen xl:min-h-full xl:max-w-6xl mx-auto py-8 px-4 sm:p-8 transition-all duration-500">
                 {/* User Result Section */}
                 <div className="bg-white dark:bg-slate-700 dark:border-slate-600 dark:bg-opacity-40 flex flex-col items-center gap-4 rounded-lg shadow-lg p-6 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-xl font-semibold text-[#FF5F1F] animate-fade-in-down">
@@ -186,9 +188,9 @@ const ResultPage = ({ quizId, userEmail }) => {
                                     key={index}
                                     className="mb-4 border dark:border-slate-700 border-gray-200 rounded-lg shadow-sm transition-all duration-300"
                                 >
-                                    <summary className="p-3 cursor-pointer dark:bg-slate-700 dark:border-slate-600 dark:hover:bg-slate-900 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all duration-200">
+                                    <summary className="p-3 cursor-pointer dark:bg-slate-800/50 dark:border-slate-600 dark:hover:bg-slate-800 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all duration-200">
                                         <strong>Q{index + 1}:</strong>
-                                        <div className="flex-1 space-y-4">
+                                        <div className=" space-y-4">
                                             {question.questionText.map((segment, segIndex) => (
                                                 <SegmentRenderer
                                                     key={segIndex}
@@ -210,6 +212,11 @@ const ResultPage = ({ quizId, userEmail }) => {
                                             <strong>Correct Answer:</strong> {question.correctOption}
                                         </div>
                                     </div>
+                                    {question.explanation.length > 0 && (
+                                        <div className='p-3 pt-0 text-neutral-800 dark:text-inherit'>
+                                            <strong>Explanation:</strong> {question.explanation}
+                                        </div>
+                                    )}
                                 </details>
                             ))}
                         </div>
@@ -219,6 +226,7 @@ const ResultPage = ({ quizId, userEmail }) => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

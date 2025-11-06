@@ -1,39 +1,65 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { jsonrepair } from "jsonrepair";
 
-const MODELS = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5", "gemini-2.5-pro"];
 
-const generatePrompt = (prompt) => {
-  const { mode, topic, difficulty, numQuestions, userPrompt } = prompt;
-  const sysDiff = {
-    'Easy': "Beginner",
-    'Medium': "Intermediate",
-    'Hard': "Advanced"
-  }
-  if(mode=='guided')
-    return `Generate ${numQuestions} multiple-choice questions on the topic "${topic}". The difficulty level is "${difficulty}". `;
-  else if (mode === 'custom') {
-    return userPrompt;
+// 🌟 Weighted model pool based on rate limits or preference
+const GEMINI_MODELS = [
+  { name: "gemini-2.5-pro", weight: 1 },
+  { name: "gemini-2.5-flash", weight: 3 },
+  { name: "gemini-2.5-flash-preview-09-2025", weight: 3 },
+  { name: "gemini-2.5-flash-lite", weight: 5 },
+  { name: "gemini-2.5-flash-lite-preview-09-2025", weight: 5 },
+  { name: "gemini-2.0-flash", weight: 2 },
+  { name: "gemini-2.0-flash-lite", weight: 2 },
+  // { name: "gemini-1.5-flash", weight: 3 },
+];
+
+/** 🎲 Random model picker with optional exclusions */
+function pickRandomModel(models, excluded = []) {
+  const available = models.filter(m => !excluded.includes(m.name));
+  if (!available.length) throw new Error("No Gemini models left to try");
+
+  const totalWeight = available.reduce((sum, m) => sum + m.weight, 0);
+  const rand = Math.random() * totalWeight;
+
+  let cumulative = 0;
+  for (const model of available) {
+    cumulative += model.weight;
+    if (rand <= cumulative) return model.name;
   }
 }
 
-export async function POST(req) {
-  const { prompt } = await req.json();
+// 🧠 Detect coding prompt
+function isCodingPrompt(prompt) {
+  const keywords = [
+    "javascript", "js", "typescript", "python", "c++", "cpp", "java",
+    "code", "coding", "react", "next.js", "node.js", "html", "css"
+  ];
+  const lower = prompt.toLowerCase();
+  return keywords.some(kw => lower.includes(kw));
+}
 
-  const finalPrompt = promptGenerator(prompt);
+/** 🚀 API call with conditional exclusion */
+export async function callGeminiAPI(prompt, tried = [], attempt = 1, maxAttempts = 3) {
+  // Exclude weak models for coding prompts
+  const uPrompt = prompt.mode=='custom' ? prompt.userPrompt : prompt.topic;
+  const excludeModels = isCodingPrompt(uPrompt)
+    ? ["gemini-2.0-flash-lite"]
+    : [];
+
+
+  const model = pickRandomModel(GEMINI_MODELS, [...tried, ...excludeModels]);
+  console.log(`🧠 Attempt ${attempt}: using model "${model}"`);
+  
   const userPrompt = generatePrompt(prompt);
+  const finalPrompt = promptGenerator(prompt);
 
-  const genAI = new GoogleGenAI({vertexai: false, apiKey: process.env.GEMINI_API_KEY});
-  // const models = await ai.models.list({config: {pageSize: 10}});
-  // for await (const model of models) {
-  //   console.log(model.name);
-  // }
-  // const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+  const genAI = new GoogleGenAI({ vertexai: false, apiKey: process.env.GEMINI_API_KEY });
 
   try {
-    const response = await genAI.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: [{role:'user', parts: [{"text": userPrompt}]}],
+    const res = await genAI.models.generateContent({
+      model: model,
+      contents: [{ role: 'user', parts: [{ "text": userPrompt }] }],
       config: {
         systemInstruction: finalPrompt,
         responseMimeType: "application/json",
@@ -57,6 +83,7 @@ export async function POST(req) {
               options: { type: Type.ARRAY, items: { type: Type.STRING } },
               correctOption: { type: Type.INTEGER, minimum: 0, maximum: 3 },
               explanation: { type: Type.STRING },
+              marks: { type: Type.INTEGER, minimum: 0 },
               id: { type: Type.STRING }
             },
             required: ["questionText", "options", "correctOption", "explanation", "id"]
@@ -64,9 +91,56 @@ export async function POST(req) {
         }
       },
     });
-    let text = response.text;
-    text = extractJSONFromMarkdown(text);
-    console.log(text);
+
+    if (res.status === 429) {
+      console.warn(`⚠️ ${model} rate-limited. Trying another model...`);
+      if (attempt < maxAttempts) {
+        return await callGeminiAPI(prompt, [...tried, model], attempt + 1, maxAttempts);
+      }
+      throw new Error("All Gemini models rate-limited.");
+    }
+
+    const data = res.text;
+    return data;
+
+  } catch (err) {
+    console.error(`❌ Error with ${model}: ${err.message}`);
+    if (attempt < maxAttempts) {
+      return await callGeminiAPI(prompt, [...tried, model], attempt + 1, maxAttempts);
+    }
+    throw new Error("Gemini API failed after all attempts.");
+  }
+}
+
+
+
+
+const generatePrompt = (prompt) => {
+  const { mode, topic, difficulty, numQuestions, userPrompt } = prompt;
+  const sysDiff = {
+    'Easy': "Beginner",
+    'Medium': "Intermediate",
+    'Hard': "Advanced"
+  }
+  if (mode == 'guided')
+    return `Generate ${numQuestions} multiple-choice questions on the topic "${topic}". The difficulty level is "${difficulty}". `;
+  else if (mode === 'custom') {
+    return userPrompt;
+  }
+}
+
+export async function POST(req) {
+  const { prompt } = await req.json();
+  
+  // const models = await ai.models.list({config: {pageSize: 10}});
+  // for await (const model of models) {
+  //   console.log(model.name);
+  // }
+  // const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+
+  try {
+    const generatedQuestions = await callGeminiAPI(prompt);
+    const text = extractJSONFromMarkdown(generatedQuestions);
 
     return new Response(JSON.stringify({ questions: text }), {
       status: 200,
@@ -82,11 +156,11 @@ export async function POST(req) {
 
 function extractJSONFromMarkdown(text) {
   // Match content between ```json ... ```
-  console.log("Full AI response:", text);
+  // console.log("Full AI response:", text);
   const jsonMatch = text.match(/\[\s*{[\s\S]*}\s*\]/);
   let raw = jsonMatch ? (jsonMatch[1] || jsonMatch[2] || jsonMatch[0]) : text;
 
-  console.log("Extracted raw content:", raw);
+  // console.log("Extracted raw content:", raw);
 
   // Step 2: Clean obvious formatting issues
   let cleaned = raw
@@ -108,8 +182,34 @@ function extractJSONFromMarkdown(text) {
     //         }
     //     }
     // })
-    console.log("Parsed JSON successfully:", questions);
+    // console.log("Parsed JSON successfully:", questions);
+    questions.forEach((q, index) => {
+      // Check if questionText segments need processing
+      q.questionText = q.questionText.map(segment => {
+        if (segment.type === 'table') {
+          // Process code segments if needed
+          return {
+            ...segment,
+            content: removeTableSeparator(segment.content)
+          };
+        }
+        return segment;
+      });
+    });
     return questions;
+
+    function removeTableSeparator(text) {
+      const separatorPattern = /\n?[\s-]+\|[\s-]+\n?/gm;
+
+      // Only modify if separator line(s) exist
+      if (separatorPattern.test(text)) {
+        return text.replace(separatorPattern, '\n');
+      }
+
+      // Return unchanged text if no separator found
+      return text;
+    }
+
 
   } catch (err) {
     console.error("Failed to parse JSON from AI response", err);
@@ -150,6 +250,7 @@ Generate high-quality quiz questions based on the provided **user query**. Your 
     "options": ["Option A", "Option B", "Option C", "Option D"],
     "correctOption": 0 | 1 | 2 | 3,  // index of correct answer
     "explanation": "Short, clear explanation for the answer.",
+    "marks":  integer >=0 , // marks for the question as per the difficulty of question.
     "id": "unique-id" // unique identifier for the question
   }
 ]
@@ -221,6 +322,7 @@ Example (Code-Based Question):
   "options": ["5", "6", "8", "9"],
   "correctOption": 2,
   "explanation": "2 ** 3 means 2 raised to the power of 3, which is 8.",
+  "marks": 2,
   "id": "unique-id"
 }
 
@@ -236,6 +338,7 @@ Example (Table-Based Science Question):
   "options": ["Hydrogen", "Oxygen", "Nitrogen", "Helium"],
   "correctOption": 2,
   "explanation": "Oxygen has the atomic number 8, which is the highest in the table.",
+  "marks": 3,
   "id": "unique-id"
 }
 
@@ -300,6 +403,7 @@ Return a JSON object with the following structure:
   "options": [ "Option A", "Option B", "Option C", "Option D" ],
   "correctOption": 0 | 1 | 2 | 3, // index of the correct answer in options
   "explanation": "Explanation of correct answer.",
+  "marks":  integer >=0 , // marks for the question as per the difficulty of question.
   "id": "unique-id" // unique identifier for the question
 }
 
@@ -351,6 +455,7 @@ Example (Code-Based Question):
   "options": ["5", "6", "8", "9"],
   "correctOption": 2,
   "explanation": "2 ** 3 means 2 raised to the power of 3, which is 8.",
+  "marks": 2,
   "id": "unique-id"
 }
 
@@ -366,6 +471,7 @@ Example (Table-Based Science Question):
   "options": ["Hydrogen", "Oxygen", "Nitrogen", "Helium"],
   "correctOption": 2,
   "explanation": "Oxygen has the atomic number 8, which is the highest in the table.",
+  "marks": 3,
   "id": "unique-id"
 }
 

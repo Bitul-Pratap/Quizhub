@@ -39,7 +39,7 @@ export function QuizPreview({ questions, onUpdateQuestion, onRemoveQuestion, set
                                 type="button"
                                 className="w-full h-10 px-4 py-2 rounded-md whitespace-nowrap text-sm transition-colors bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium disabled:opacity-50"
                                 disabled={questions.length === 0}
-                                onClick={() => { console.log(questions); setFinalise(true) }}
+                                onClick={() => { setFinalise(true) }}
                             >
                                 Finalise Quiz ({questions.length} questions)
                             </button>

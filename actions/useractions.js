@@ -139,7 +139,7 @@ export const updateQuiz = async (quizId, updatedQuizData) => {
     // Extract existing question IDs
     // const existingQuestionIds = existingQuiz.questions.map((q) => q._id.toString());
 
-    console.log(updatedQuizData);
+    // console.log(updatedQuizData);
     // Extract updated question IDs from client data
     const updatedQuestionIds = updatedQuizData.questions
       .filter((q) => q._id) // Only include questions with an ID
@@ -474,6 +474,7 @@ export const getQuizFeedback = async (quizId, userEmail) => {
         userAnswer,
         correctOption,
         isCorrect,
+        explanation: question.explanation || 'No explanation provided.',
       };
     });
     
@@ -505,7 +506,7 @@ export const isUserReg = async (email) => {
     }
 
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     return { status: false, error: "Error finding user in database" };
   }
 }

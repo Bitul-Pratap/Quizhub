@@ -33,7 +33,6 @@ export function AIGeneration({ onAddMultipleQuestions }) {
     const [isGenerating, setIsGenerating] = useState(false)
     const [generatedQuestions, setGeneratedQuestions] = useState([])
     const [showPreview, setShowPreview] = useState(false)
-    const [marksError, setMarksError] = useState([]);
     const [customEnabled, setCustomEnabled] = useState(false)
     const [customPrompt, setCustomPrompt] = useState("")
     const [showPopup, setShowPopup] = useState(false);
@@ -41,16 +40,16 @@ export function AIGeneration({ onAddMultipleQuestions }) {
 
 
 
-    useEffect(() => {
-        if (generatedQuestions?.length > 0) {
-            const ids = generatedQuestions.map(q => q.id);
-            setMarksError([...ids]);
-            setShowPopup(true);
-        }
-        return () => {
-            setMarksError([]);
-        }
-    }, [generationVersion]);
+    // useEffect(() => {
+    //     if (generatedQuestions?.length > 0) {
+    //         const ids = generatedQuestions.map(q => q.id);
+    //         setMarksError([...ids]);
+    //         setShowPopup(true);
+    //     }
+    //     return () => {
+    //         setMarksError([]);
+    //     }
+    // }, [generationVersion]);
 
     async function generateQuiz(prompt) {
         const res = await fetch('/api/quiz/generate-quiz', {
@@ -62,7 +61,7 @@ export function AIGeneration({ onAddMultipleQuestions }) {
         })
 
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
         return data;
     }
 
@@ -77,7 +76,7 @@ export function AIGeneration({ onAddMultipleQuestions }) {
             userPrompt: customEnabled ? customPrompt : '',
         }
 
-        console.log(prompt)
+        // console.log(prompt)
 
         setIsGenerating(true)
         setShowPreview(false)
@@ -114,13 +113,10 @@ export function AIGeneration({ onAddMultipleQuestions }) {
         setGenerationVersion((prev) => prev + 1);
         setIsGenerating(false);
         setShowPreview(true);
+        setShowPopup(true);
     }
 
     const handleAddToQuiz = () => {
-        if (marksError.length > 0) {
-            setShowPopup(true)
-            return;
-        }
         onAddMultipleQuestions(generatedQuestions)
         setGeneratedQuestions([])
         setShowPreview(false)
@@ -131,11 +127,9 @@ export function AIGeneration({ onAddMultipleQuestions }) {
 
     return (
         <div className="space-y-6">
-            <Popup
-                show={showPopup}
-                onClose={() => setShowPopup(false)}
-                children={"Please ensure all questions have valid marks assigned before proceeding."}
-            />
+            <Popup show={showPopup} onClose={() => setShowPopup(false)}>
+                Marks are randomly assigned to generated questions. Please ensure to review and adjust them as needed.
+            </Popup>
             <div className="rounded-lg border bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border-purple-200 dark:border-purple-700 shadow-sm">
                 <div className="p-6">
                     <div className="flex items-center space-x-2 text-2xl leading-none tracking-tight font-semibold">
@@ -274,7 +268,7 @@ export function AIGeneration({ onAddMultipleQuestions }) {
                     <div className="p-6 pt-0 space-y-4">
                         {generatedQuestions.map((q, index) => (
                             <div key={index} className="rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm mb-2">
-                                <QuestionPreview question={q} index={index} setGeneratedQuestions={setGeneratedQuestions} setMarksError={setMarksError} />
+                                <QuestionPreview question={q} index={index} setGeneratedQuestions={setGeneratedQuestions} />
                             </div>
                         ))}
                         <div className="flex space-x-3 pt-4">

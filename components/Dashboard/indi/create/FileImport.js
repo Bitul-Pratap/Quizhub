@@ -144,7 +144,7 @@ export function FileImport({ onAddMultipleQuestions }) {
         e.preventDefault();
         if (e.target.files) {
             const selected = Array.from(e.target.files);
-            console.log('Selected files:', selected);
+            // console.log('Selected files:', selected);
             setFiles(selected);
             handleUpload(e, selected);
         }
@@ -157,7 +157,7 @@ export function FileImport({ onAddMultipleQuestions }) {
         // for (let pair of formData.entries()) {
         //     console.log(pair[0], pair[1]);
         // }
-        console.log([...formData.entries()]);
+        // console.log([...formData.entries()]);
         setUploading(true);
 
         const res = await fetch('/api/quiz/import-files/upload', {
@@ -167,7 +167,7 @@ export function FileImport({ onAddMultipleQuestions }) {
 
         setUploading(false);
         const result = await res.json();
-        console.log('Uploaded:', result);
+        // console.log('Uploaded:', result);
     };
 
     const ModalHandler = () => {
