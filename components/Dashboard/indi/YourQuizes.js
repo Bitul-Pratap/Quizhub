@@ -509,7 +509,7 @@ const YourQuizes = () => {
                                                 name="endDate"
                                                 id="endDate"
                                                 placeholder="dd/mm/yyyy"
-                                                className={`border-[1.4px] px-2 py-1 text-center sm:text-left rounded focus:border-orange-400 outline-none bg-transparent border-gray-400 dark:border-slate-700 text-sm disabled:cursor-not-allowed disabled:bg-slate-900 ${errors.endDate ? 'border-red-500' : 'border-gray-400'
+                                                className={`border-[1.4px] px-2 py-1 text-center sm:text-left rounded focus:border-orange-400 outline-none bg-transparent border-gray-400 dark:border-slate-700 text-sm disabled:cursor-not-allowed disabled:bg-gray-200 dark:disabled:bg-slate-600 dark:bg-slate-900 ${errors.endDate ? 'border-red-500' : 'border-gray-400'
                                                     } `}
                                                 value={editFormData.endDate || ""}
                                                 onChange={handleChange}

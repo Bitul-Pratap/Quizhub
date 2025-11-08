@@ -69,6 +69,7 @@ const ResultPage = ({ quizId, userEmail }) => {
 
         socket.on('leaderboardUpdate', (updatedBoard) => {
             setLoading(true);
+            console.log("Leaderboard update received: ", updatedBoard);
             setLeaderboard((prevLeaderboard) => {
                 return [...updatedBoard].slice(0, 10);
             });
