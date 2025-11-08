@@ -29,6 +29,7 @@ const ResultPage = ({ quizId, userEmail }) => {
                 // setUserRank(userRankData !== -1 ? userRankData + 1 : leaderboardData.length + 1);
 
                 const feedbackData = await getQuizFeedback(quizId, userEmail);
+                console.log("Result Page: ", result, feedbackData, quizId, userEmail);
                 setFeedback(feedbackData);
             } catch (error) {
                 console.error('Error fetching quiz data:', error);

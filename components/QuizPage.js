@@ -157,6 +157,7 @@ const QuizAttemptPage = ({ quizData }) => {
                 theme: "colored",
                 transition: Bounce,
             });
+            console.log("QuizPage: ", quizData);
             setTimeout(() => {
                 // Redirect to result page
                 router.push(`/quiz/${quizData.quizId}/result?quizId=${quizData._id}&userEmail=${userData}`);
