@@ -45,7 +45,7 @@ export const metadata = {
     images: [`${process.env.NEXT_PUBLIC_URL}/image.png`],
     creator: "@your_twitter_handle"
   },
-  
+
 };
 
 export default function RootLayout({ children }) {
@@ -54,28 +54,30 @@ export default function RootLayout({ children }) {
       {/* <body className="bg-gradient-to-b from-gray-100 to-orange-200"> */}
       <body className="text-neutral-800  dark:text-[#e3e3e3] bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
         <SessionWrapper>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-        <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                draggablePercent={60}
-                pauseOnHover
-                theme="light"
-                style={{zIndex:100}}
-              />
-          <div className="min-h-screen  bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800  ">
-          {/* <MainNavbar /> */}
-      {/* <Suspense fallback={<Loading />}> */}
-        {children}
-      {/* </Suspense> */}
-        </div>
-        </ThemeProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <ToastContainer
+              stacked
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              draggablePercent={60}
+              pauseOnHover
+              theme="light"
+              style={{ zIndex: 100 }}
+              toastStyle={{ background: "#FF5F1F", width: "100%" }}
+            />
+            <div className="min-h-screen  bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800  ">
+              {/* <MainNavbar /> */}
+              {/* <Suspense fallback={<Loading />}> */}
+              {children}
+              {/* </Suspense> */}
+            </div>
+          </ThemeProvider>
         </SessionWrapper>
       </body>
     </html>

@@ -92,7 +92,7 @@ const ResultPage = ({ quizId, userEmail }) => {
         <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-300 dark:from-slate-900 dark:to-slate-900 text-neutral-800 dark:text-[#e3e3e3] md:p-6">
             <div className="bg-white dark:bg-slate-800 dark:shadow-slate-900 dark:border dark:border-slate-700 shadow-2xl md:rounded-lg max-w-4xl min-h-screen xl:min-h-full xl:max-w-6xl mx-auto py-8 px-4 sm:p-8 transition-all duration-500">
                 {/* User Result Section */}
-                <div className="bg-white dark:bg-slate-700 dark:border-slate-600 dark:bg-opacity-40 flex flex-col items-center gap-4 rounded-lg shadow-lg p-6 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
+                <div className="bg-white dark:bg-slate-700 dark:border-slate-600 dark:bg-opacity-40 flex flex-col items-center gap-4 rounded-lg shadow-lg px-3 py-6 sm:p-6 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-xl font-semibold text-[#FF5F1F] animate-fade-in-down">
                         Your Quiz Result
                     </h3>
@@ -119,7 +119,7 @@ const ResultPage = ({ quizId, userEmail }) => {
                 </div>
 
                 {/* Leaderboard Section */}
-                <div className="bg-white dark:bg-slate-700 dark:border-slate-600 dark:bg-opacity-40 rounded-lg shadow-lg p-6 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
+                <div className="bg-white dark:bg-slate-700 dark:border-slate-600 dark:bg-opacity-40 rounded-lg shadow-lg px-3 py-6 sm:p-6 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-xl font-semibold text-center text-[#FF5F1F] mb-4 animate-fade-in-down">
                         Leaderboard
                     </h3>
@@ -179,7 +179,7 @@ const ResultPage = ({ quizId, userEmail }) => {
                 </div>
 
                 {/* Quiz Feedback Section */}
-                <div className="bg-white dark:bg-slate-700 dark:border-slate-600 dark:bg-opacity-40 rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
+                <div className="bg-white dark:bg-slate-700 dark:border-slate-600 dark:bg-opacity-40 rounded-lg shadow-lg px-3 py-6 sm:p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
                     <h3 className="text-xl font-semibold text-center mb-4 text-[#FF5F1F] animate-fade-in-down">
                         Answers
                     </h3>

@@ -22,30 +22,33 @@ const Regindi = () => {
     data.email = data.email?.toLowerCase();
     // console.log(data);
     let u = await registerUser(data);
-    // console.log(u);
+    
+    console.log(u);
     if (u.status == true) {
       toast.success(u.message, {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "colored",
         transition: Bounce,
       })
-      toast('Please Login.', {
+      setTimeout(() => {
+      toast.info('Redirecting to Login.', {
         position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
+        autoClose: 1200,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "colored",
         transition: Bounce,
       });
+      }, 2000)
       setTimeout(() => {
         router.push("/login");
       }, 3500);
@@ -59,7 +62,7 @@ const Regindi = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "colored",
         transition: Bounce,
       })
     }
@@ -69,19 +72,6 @@ const Regindi = () => {
 
   return (
     <>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        draggablePercent={60}
-        pauseOnHover
-        theme="light"
-      />
       {/* Same as */}
       {/* <ToastContainer /> */}
 
@@ -97,15 +87,15 @@ const Regindi = () => {
           <hr className='dark:border-neutral-600' />
         </div>
         <div className='w-full h-full flex gap-6 lg:gap-28 justify-start' >
-          <form action={handleSubmit(onSubmit)} className='mt-5 md:w-1/2 w-full flex flex-col gap-4 items-center px-2 pl-0 sm:px-5'>
+          <form onSubmit={handleSubmit(onSubmit)} className='mt-5 md:w-1/2 w-full flex flex-col gap-4 items-center px-2 pl-0 sm:px-5'>
             <div className='w-full'>
               <label className='block mb-1' htmlFor="name">Full Name</label>
-              <input className='rounded-md dark:border-slate-700 bg-transparent text-sm w-full border-[1.4px]  hover:border-orange-400 dark:hover:border-orange-500 outline-none border-gray-400 p-2' type="text" {...register("name", { required: { value: true, message: 'Field is required' } })} id='name' placeholder='Your full name' />
+              <input className='rounded-md dark:border-slate-700 bg-transparent text-sm w-full border-[1.4px]  hover:border-orange-400 dark:hover:border-orange-500 outline-none border-gray-400 p-2' type="text" {...register("name", { required: { value: true, message: 'Field is required' } })} id='name' placeholder='Your full name' autoComplete='name' />
               {errors.name && <p className='text-red-500 text-xs ml-2'>{`${errors.name.message}`}</p>}
             </div>
             <div className='w-full'>
               <label className='block mb-1' htmlFor="email">Email address</label>
-              <input className='rounded-md dark:border-slate-700 bg-transparent text-sm w-full border-[1.4px]  hover:border-orange-400 dark:hover:border-orange-500 outline-none border-gray-400 p-2' type="email" {...register("email", { required: { value: true, message: 'Field is required' } })} id='email' placeholder='Enter your email address' />
+              <input className='rounded-md dark:border-slate-700 bg-transparent text-sm w-full border-[1.4px]  hover:border-orange-400 dark:hover:border-orange-500 outline-none border-gray-400 p-2' type="email" {...register("email", { required: { value: true, message: 'Field is required' } })} id='email' placeholder='Enter your email address' autoComplete='email' />
               {errors.email && <p className='text-red-500 text-xs ml-2'>{`${errors.email.message}`}</p>}
             </div>
             <div className='w-full'>
@@ -113,14 +103,15 @@ const Regindi = () => {
               <input className='rounded-md dark:border-slate-700 bg-transparent text-sm w-full border-[1.4px]  hover:border-orange-400 dark:hover:border-orange-500 outline-none border-gray-400 p-2' type="number" {...register("phone", {
                 validate: (value) =>
                   (value.length == 10 || value.length == 0) || "Invalid phone no",
-              })} id='phone' placeholder='Enter your phone no' />
+              })} id='phone' placeholder='Enter your phone no' 
+              autoComplete='tel' />
               {errors.phone && <p className='text-red-500 text-xs ml-2'>{`${errors.phone.message}`}</p>}
             </div>
             <div className='w-full flex sm:flex-row flex-col gap-4 justify-between'>
               <div className='w-full'>
                 <label className='block mb-1' htmlFor="password">Password</label>
                 <div className='relative'>
-                  <input className='rounded-md dark:border-slate-700 bg-transparent text-sm w-full border-[1.4px]  hover:border-orange-400 dark:hover:border-orange-500 outline-none border-gray-400 p-2 pr-9 ' type={show?"text":"password"} {...register("password", { required: { value: true, message: 'Field is required' }, minLength: { value: 8, message: "Password should contain at least 8 characters." }, maxLength: { value: 18, message: "Password should not contain more than 18 characters." } })} id='password' placeholder='Enter password' />
+                  <input className='rounded-md dark:border-slate-700 bg-transparent text-sm w-full border-[1.4px]  hover:border-orange-400 dark:hover:border-orange-500 outline-none border-gray-400 p-2 pr-9 ' type={show?"text":"password"} {...register("password", { required: { value: true, message: 'Field is required' }, minLength: { value: 8, message: "Password should contain at least 8 characters." }, maxLength: { value: 18, message: "Password should not contain more than 18 characters." } })} id='password' placeholder='Enter password' autoComplete='new-password' />
                   <div onClick={() => { setShow(!show) }} className='absolute right-0 rounded-r-md bg-transparent flex items-center justify-center -translate-y-[98%] w-fit p-2 cursor-pointer'>
                     {show !== true ?
                       (<svg className="eye-close" width="22px" height="22px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g strokeWidth="0"></g><g strokeLinecap="round" strokeLinejoin="round"></g><g > <path d="M4 10C4 10 5.6 15 12 15M12 15C18.4 15 20 10 20 10M12 15V18M18 17L16 14.5M6 17L8 14.5" className='dark:stroke-gray-300' stroke="#464455" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>) : (
@@ -135,7 +126,7 @@ const Regindi = () => {
                 <input className='rounded-md dark:border-slate-700 bg-transparent text-sm w-full border-[1.4px]  hover:border-orange-400 dark:hover:border-orange-500 outline-none border-gray-400 p-2' type="text" {...register("confirmPassword", {
                   required: { value: true, message: 'Field is required' }, validate: (value) =>
                     value === password || "The passwords do not match",
-                })} id='confirmPassword' placeholder='Re enter password' />
+                })} id='confirmPassword' placeholder='Re enter password' autoComplete='new-password' />
                 {errors.confirmPassword && <p className='text-red-500 text-xs ml-2'>{`${errors.confirmPassword.message}`}</p>}
               </div>
             </div>

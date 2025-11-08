@@ -409,7 +409,7 @@ export const saveQuizAttempt = async (quizAttemptData) => {
 export const getQuizAttemptDetails = async (quizId, userEmail) => {
   try {
     await connectDB();
-    console.log("[DEBUG] Incoming request: ", quizId, userEmail);
+    // console.log("[DEBUG] Incoming request: ", quizId, userEmail);
 
     const quizAttempt = await QuizAttempt.findOne({ quizId, userEmail }).exec();
 
@@ -455,7 +455,7 @@ export const getLeaderboard = async (quizId) => {
 export const getQuizFeedback = async (quizId, userEmail) => {
   try {
     await connectDB();
-    console.log("[DEBUG] Incoming request for feedback: ", quizId, userEmail);
+    // console.log("[DEBUG] Incoming request for feedback: ", quizId, userEmail);
     // Fetch quiz attempt
     const quizAttempt = await QuizAttempt.findOne({ quizId, userEmail }).exec();
     if (!quizAttempt) {

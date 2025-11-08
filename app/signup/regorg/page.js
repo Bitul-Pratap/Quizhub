@@ -387,30 +387,30 @@ const Regorg = () => {
                                     {isReg === true ?
                                         <div className=''>
                                             <label htmlFor="email" className='block mb-1' >Email</label>
-                                            <input onChange={handleUserInputChange} type="email" name='email' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500   outline-none border-gray-400 py-1 px-2' placeholder='user@gmail.com' value={form.email ? form.email : ""} />
+                                            <input onChange={handleUserInputChange} type="email" name='email' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500   outline-none border-gray-400 py-1 px-2' placeholder='user@gmail.com' value={form.email ? form.email : ""} autoComplete='email'/>
                                             {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email}</p>}
                                         </div>
                                         :
                                         <>
                                             <div className=''>
                                                 <label htmlFor="name" className='block mb-1' >Name</label>
-                                                <input onChange={handleUserInputChange} type="text" name='name' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500 outline-none border-gray-400 py-1 px-2' placeholder='Name' value={form.name ? form.name : ""} />
+                                                <input onChange={handleUserInputChange} type="text" name='name' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500 outline-none border-gray-400 py-1 px-2' placeholder='Name' value={form.name ? form.name : ""} autoComplete='name' />
                                                 {errors.name && <p className="text-red-500 text-sm mt-2">{errors.name}</p>}
                                             </div>
                                             <div className=''>
                                                 <label htmlFor="email" className='block mb-1' >Email</label>
-                                                <input onChange={handleUserInputChange} type="email" name='email' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500   outline-none border-gray-400 py-1 px-2' placeholder='user@gmail.com' value={form.email ? form.email : ""} />
+                                                <input onChange={handleUserInputChange} type="email" name='email' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500   outline-none border-gray-400 py-1 px-2' placeholder='user@gmail.com' value={form.email ? form.email : ""} autoComplete='email' />
                                                 {errors.email && <p className="text-red-500 text-sm mt-2">{errors.email}</p>}
                                             </div>
                                             <div className=''>
                                                 <label htmlFor="phone" className='block mb-1'>Phone No</label>
-                                                <input onChange={handleUserInputChange} type="number" name='phone' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500  outline-none border-gray-400 py-1 px-2' placeholder='Phone No' value={form.phone ? form.phone : ""} />
+                                                <input onChange={handleUserInputChange} type="number" name='phone' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500  outline-none border-gray-400 py-1 px-2' placeholder='Phone No' value={form.phone ? form.phone : ""} autoComplete='tel'/>
                                                 {errors.phone && <p className="text-red-500 text-sm mt-2">{errors.phone}</p>}
                                             </div>
                                             <div className=''>
                                                 <label htmlFor="password" className='block mb-1'>Password</label>
                                                 <div className='relative'>
-                                                    <input onChange={handleUserInputChange} type={show ? "text" : "password"} name='password' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500  outline-none border-gray-400 py-1 px-2 pr-10' placeholder='Password' value={form.password ? form.password : ""} />
+                                                    <input onChange={handleUserInputChange} type={show ? "text" : "password"} name='password' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500  outline-none border-gray-400 py-1 px-2 pr-10' placeholder='Password' value={form.password ? form.password : ""} autoComplete='new-password' />
                                                     <div onClick={() => { setShow(!show) }} className='absolute right-0 rounded-r-md bg-transparent flex items-center justify-center -translate-y-[90%] w-fit p-2
                                                  cursor-pointer'>
                                                         {show !== true ?
@@ -423,7 +423,7 @@ const Regorg = () => {
                                             </div>
                                             <div className=''>
                                                 <label htmlFor="confirmPassword" className='block mb-1'>Confirm Password</label>
-                                                <input onChange={handleUserInputChange} type="text" name='confirmPassword' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500  outline-none border-gray-400 py-1 px-2' placeholder='Confirm Password' value={form.confirmPassword ? form.confirmPassword : ""} />
+                                                <input onChange={handleUserInputChange} type="text" name='confirmPassword' className='rounded dark:border-slate-600 bg-transparent text-sm w-full border-[1.4px] hover:border-orange-400 dark:hover:border-orange-500  outline-none border-gray-400 py-1 px-2' placeholder='Confirm Password' value={form.confirmPassword ? form.confirmPassword : ""} autoComplete='new-password' />
                                                 {errors.confirmPassword && <p className="text-red-500 text-sm mt-2">{errors.confirmPassword}</p>}
                                             </div>
                                         </>}
