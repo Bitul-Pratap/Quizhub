@@ -9,11 +9,11 @@ import { QuestionPreview } from "./QuestionPreview";
 const Popup = ({ show, onClose, children }) => {
     if (!show) return null;
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-20 z-50">
-            <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 w-full max-w-2xl">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+            <div className="bg-white dark:bg-slate-700 rounded-lg shadow-lg mx-3 sm:mx-0 p-6 w-full max-w-2xl">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-semibold">Info</h2>
-                    <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
                         <X className="w-5 h-5" />
                     </button>
                 </div>
@@ -131,14 +131,14 @@ export function AIGeneration({ onAddMultipleQuestions }) {
                 Marks are randomly assigned to generated questions. Please ensure to review and adjust them as needed.
             </Popup>
             <div className="rounded-lg border bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border-purple-200 dark:border-purple-700 shadow-sm">
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                     <div className="flex items-center space-x-2 text-2xl leading-none tracking-tight font-semibold">
                         <Brain className="h-5 w-5 text-purple-600 flex-shrink-0" />
                         <span>AI-Powered Quiz Generation</span>
                         <span className="hidden sm:block ml-2 px-2.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-100 text-purple-700 dark:text-purple-500 text-xs font-semibold">New</span>
                     </div>
                 </div>
-                <div className="p-6 pt-0 space-y-4">
+                <div className="p-4 sm:p-6 pt-0 space-y-4">
                     <div className="group flex items-center mb-6 border-[1.4px] border-t-0 shadow dark:shadow-purple-800/40 w-fit rounded-b-full bg-gradient-to-t from-purple-200/60 dark:from-transparent/40 to-purple-50 border-purple-400 dark:border-purple-700 ">
                         <button 
                             className="px-4 py-1 text-sm text-purple-800 dark:text-purple-400 hover:bg-purple-200/50 dark:hover:bg-purple-900/40 rounded-bl-full"
@@ -231,7 +231,7 @@ export function AIGeneration({ onAddMultipleQuestions }) {
                             </>
                         ) : (
                             <>
-                                <Brain className="h-4 w-4 mr-2" />🎯 Generate Quiz with AI
+                                <Brain className="h-4 w-4 mr-2" /> Generate Quiz with AI
                             </>
                         )}
                     </button>
@@ -262,10 +262,10 @@ export function AIGeneration({ onAddMultipleQuestions }) {
                     <div className="p-6 ">
                         <div className="flex items-center justify-between text-xl font-semibold">
                             <span className="leading-tight sm:leading-normal">Generated Questions Preview</span>
-                            <span className="px-2.5 py-0.5 rounded-full font-semibold border dark:border-slate-700 text-xs">{generatedQuestions.length} questions</span>
+                            <span className="px-2.5 py-0.5 rounded-full font-semibold border dark:border-slate-700 text-center text-xs">{generatedQuestions.length} questions</span>
                         </div>
                     </div>
-                    <div className="p-6 pt-0 space-y-4">
+                    <div className="p-4 sm:p-6 pt-0 space-y-4">
                         {generatedQuestions.map((q, index) => (
                             <div key={index} className="rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm mb-2">
                                 <QuestionPreview question={q} index={index} setGeneratedQuestions={setGeneratedQuestions} />
@@ -274,13 +274,13 @@ export function AIGeneration({ onAddMultipleQuestions }) {
                         <div className="flex space-x-3 pt-4">
                             <button
                                 onClick={handleAddToQuiz}
-                                className="flex-1 flex items-center justify-center px-4 py-2 rounded-md text-white font-semibold bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+                                className="flex-1 flex items-center justify-center p-2 sm:px-4 py-2 rounded-md text-white font-semibold bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
                             >
                                 <Plus className="h-4 w-4 mr-2" />
                                 Add All to Quiz
                             </button>
                             <button
-                                className=" flex items-center justify-center px-4 py-2 rounded-md border font-semibold hover:bg-slate-100"
+                                className=" flex items-center justify-center p-2 sm:px-4 py-2 rounded-md border dark:border-slate-700 font-semibold hover:bg-slate-100"
                                 onClick={() => setShowPreview(false)}
                             >
                                 Cancel

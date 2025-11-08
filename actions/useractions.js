@@ -440,7 +440,7 @@ export const getLeaderboard = async (quizId) => {
       .sort({ score: -1 })
       .exec();
 
-      console.log("Leaderboard: ", quizId);
+      // console.log("Leaderboard: ", quizId);
 
     return leaderboard.map((attempt) => ({
       userEmail: attempt.userEmail,

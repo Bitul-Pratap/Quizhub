@@ -29,7 +29,7 @@ const ResultPage = ({ quizId, userEmail }) => {
                 // setUserRank(userRankData !== -1 ? userRankData + 1 : leaderboardData.length + 1);
 
                 const feedbackData = await getQuizFeedback(quizId, userEmail);
-                console.log("Result Page: ", result, feedbackData, quizId, userEmail);
+                // console.log("Result Page: ", result, feedbackData, quizId, userEmail);
                 setFeedback(feedbackData);
             } catch (error) {
                 console.error('Error fetching quiz data:', error);
@@ -52,7 +52,7 @@ const ResultPage = ({ quizId, userEmail }) => {
             attempt++;
             setLoading(true);
             setLoadingMsg("Taking longer than usual to connect, retrying ");
-            console.info(attempt);
+            // console.info(attempt);
             if (attempt >= 5) {
                 setLoadingMsg("Error connecting to server, refresh the page to try again.");
                 setLoading(false);
@@ -69,7 +69,7 @@ const ResultPage = ({ quizId, userEmail }) => {
 
         socket.on('leaderboardUpdate', (updatedBoard) => {
             setLoading(true);
-            console.log("Leaderboard update received: ", updatedBoard);
+            // console.log("Leaderboard update received: ", updatedBoard);
             setLeaderboard((prevLeaderboard) => {
                 return [...updatedBoard].slice(0, 10);
             });

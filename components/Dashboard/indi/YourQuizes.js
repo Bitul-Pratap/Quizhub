@@ -67,7 +67,7 @@ const YourQuizes = () => {
                 }
             });
             setSubjects([...subjects]);
-            console.log("Fetched Quizzes:", quizes);
+            // console.log("Fetched Quizzes:", quizes);
         }
         setLoading(false);
     };
@@ -818,7 +818,7 @@ const YourQuizes = () => {
             {/* Single Modal */}
             {modalType && selectedQuiz && isModalOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
-                    <div className={`bg-white dark:bg-slate-800 rounded-lg p-6 w-full max-w-3xl max-h-[80%] overflow-auto shadow-lg relative dark:text-[#e3e3e3] transition-all duration-300 ${isAnimating ? 'slide-in ease-in' : 'slide-out ease-in'}`}>
+                    <div className={`bg-white dark:bg-slate-800 rounded-lg  py-6 px-4  sm:p-6 w-full max-w-3xl max-h-[80%] overflow-auto shadow-lg relative dark:text-[#e3e3e3] transition-all duration-300 ${isAnimating ? 'slide-in ease-in' : 'slide-out ease-in'}`}>
                         <button
                             className="absolute top-3 right-3 text-gray-400 dark:hover:text-gray-200 hover:text-gray-600"
                             onClick={closeModal}

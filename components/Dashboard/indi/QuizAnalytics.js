@@ -109,7 +109,7 @@ const QuizAnalytics = () => {
                   {/* Analytics Display */}
           {analytics ? (
             <>
-              <div className="bg-white dark:bg-slate-900 shadow-md dark:shadow-slate-950 rounded-lg p-6">
+              <div className="bg-white dark:bg-slate-900 shadow-md dark:shadow-slate-950 rounded-lg p-3 sm:p-6">
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-inherit mb-4">{analytics.title} Analytics</h2>
 
                 {/* Quiz info */}
@@ -135,10 +135,10 @@ const QuizAnalytics = () => {
                               ? analytics.leaderboard
                               : analytics.leaderboard.slice(0, 10)
                             ).map((attempt, index) => (
-                              <li key={index} className={`flex flex-col sm:flex-row will-change-auto gap-1 sm:gap-0 text-sm justify-between p-2 border-b border-gray-200 dark:border-slate-400 opacity-0 ${index > 9 ? "animate-slide-up" : "animate-slide-in"}`}
+                              <li key={index} className={`flex flex-col sm:flex-row will-change-auto gap-1 sm:gap-0 text-sm justify-between sm:p-2 border-b border-gray-200 dark:border-slate-400 overflow-ellipsis opacity-0 ${index > 9 ? "animate-slide-up" : "animate-slide-in"}`}
                               style={{ animationDelay: `${index * 0.1}s` }} >
                               <div className="flex items-center gap-2 sm:gap-4">
-                                <span>{index + 1}. </span><span>{attempt.userEmail}</span>
+                                <span>{index + 1}. </span><span className="overflow-x-auto">{attempt.userEmail}</span>
                               </div>
                               <span className="text-gray-500 self-end dark:text-gray-400">Score: {attempt.score}/{attempt.maxMarks}{" | "}Correct:{attempt.correctQuestions}/{attempt.totalQuestions}</span>
                               </li>

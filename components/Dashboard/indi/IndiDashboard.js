@@ -37,7 +37,7 @@ const SideNavbar = ({ option, handleOption, menuItems, isSideNavOpen }) => {
 
 
   return (
-    <div className={`transition-all rounded-full sm:rounded-none sm:min-h-screen delay-75 duration-200 sm:delay-0 sm:duration-300 sm:w-20 2xl:w-52 fixed right-3 top-14 z-50 sm:z-0 sm:right-0 sm:top-0 ${isSideNavOpen ? 'translate-x-0 shadow-md ' : 'translate-x-40'} sm:translate-x-0  sm:static flex sm:flex-col gap-2 bg-white/80 dark:bg-slate-900/80 sm:h-full border-r border-slate-200 dark:border-slate-700`}>
+    <div className={`transition-all rounded-full sm:rounded-none sm:min-h-screen delay-75 duration-200 sm:delay-0 sm:duration-300 sm:w-20 2xl:w-52 fixed right-3 top-14 z-50 sm:z-0 sm:right-0 sm:top-0 ${isSideNavOpen ? 'translate-x-0 shadow-md ' : 'translate-x-40'} sm:translate-x-0  sm:static flex sm:flex-col gap-2 bg-white/80 dark:bg-slate-900 sm:dark:bg-slate-900/80 sm:h-full border-r border-slate-200 dark:border-slate-700`}>
       <div className='h-16 relative hidden sm:flex items-center justify-center px-2'>
         <Link href='/' className='w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-r from-orange-500 to-orange-600'>
           <span className='text-white font-bold text-2xl'>Q</span>
@@ -134,7 +134,7 @@ const IndiDashboard = ({ resetDash }) => {
 
         <SideNavbar option={option} handleOption={handleOption} menuItems={menuItems} isSideNavOpen={isSideNavOpen} />
 
-        <div className={`absolute top-[62px] right-4 text-slate-900 dark:text-slate-300 sm:static sm:hidden  ${isSideNavOpen ? '-translate-x-[8.5rem]' : 'translate-x-0'} transition-transform duration-300 z-50 `}>
+        <div className={`absolute top-[60px] right-4 text-slate-900 dark:text-slate-300 sm:static sm:hidden  ${isSideNavOpen ? '-translate-x-[8.5rem]' : 'translate-x-0'} transition-transform duration-300 z-50 `}>
           <div className='flex gap-1 justify-center items-center'>
             <button onClick={()=>router.push('/')} className='w-6 h-6 p-1 flex items-center justify-center rounded-full text-white bg-orange-500 shadow-md'>
               <Home className='w-5 h-5' />
@@ -148,7 +148,7 @@ const IndiDashboard = ({ resetDash }) => {
         <div className='h-full w-full flex flex-col'>
           <div className='flex bg-white/80 dark:bg-slate-900/80 justify-between items-center border-b border-slate-200 dark:border-slate-700 px-4 py-2 '>
             <div className="title">
-              <h2 className='text-xl font-bold font-serif text-slate-900 dark:text-slate-100' >Welcome, <span className='text-[#FF4c00] dark:text-orange-500'>{session?.user?.name}</span></h2>
+              <h2 className='text-xl font-bold font-serif text-slate-900 dark:text-slate-100' >Welcome, <span className='text-[#FF4c00] dark:text-orange-500'>{session?.user?.name.split(" ")[0]}</span></h2>
             </div>
             <div className='flex items-center gap-4'>
               <ThemeToggle />

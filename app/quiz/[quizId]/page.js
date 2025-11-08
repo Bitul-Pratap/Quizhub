@@ -7,7 +7,7 @@ const QuizId = async ({ params }) => {
 
     const quizId = (await params).quizId;
     const quizData = await fetchQuizData(quizId);
-    console.log("Quiz PAge: ",quizId, quizData);
+    // console.log("Quiz PAge: ",quizId, quizData);
     // console.log(quizData.endDate, new Date(), quizData.endDate < new Date());
     if (quizData.error) {
         return (

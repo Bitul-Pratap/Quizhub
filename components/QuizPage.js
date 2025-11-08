@@ -13,16 +13,20 @@ const QuizAttemptPage = ({ quizData }) => {
     const [selectedAnswers, setSelectedAnswers] = useState({});
     const [user, setUser] = useState("");
     const [userData, setUserData] = useState("");
+    const [loading, setLoading] = useState(false);
     
 
-    const handleAnswerChange = (questionId, answer) => {
+    const handleAnswerChange = (e, questionId, answer) => {
+        e.preventDefault();
         setSelectedAnswers((prev) => ({
             ...prev,
             [questionId]: answer,
         }));
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
         const unansweredQuestions = quizData.questions.filter(
             (q) => !selectedAnswers[q._id]
         );
@@ -80,7 +84,7 @@ const QuizAttemptPage = ({ quizData }) => {
                 });
                 setTimeout(() => {
                     // Redirect to result page
-                    router.push(`/quiz/${quizData.quizId}/result?quizId=${quizData._id}&userEmail=${user}`);
+                    router.push(`/quiz/${quizData._id}/result?userEmail=${user}`);
                 }, 3000);
 
             } else {
@@ -112,6 +116,7 @@ const QuizAttemptPage = ({ quizData }) => {
             });
             // alert("An error occurred while submitting your quiz attempt.");
         }
+        setLoading(false);
 
     };
 
@@ -141,6 +146,7 @@ const QuizAttemptPage = ({ quizData }) => {
             alert("Please enter a valid email address.");
             return;
         }
+        setLoading(true);
         try{
         const isValid = await isValidAttempt(quizData._id, userData);
         // console.log(isValid);
@@ -157,10 +163,10 @@ const QuizAttemptPage = ({ quizData }) => {
                 theme: "colored",
                 transition: Bounce,
             });
-            console.log("QuizPage: ", quizData);
+            // console.log("QuizPage: ", quizData);
             setTimeout(() => {
                 // Redirect to result page
-                router.push(`/quiz/${quizData.quizId}/result?quizId=${quizData._id}&userEmail=${userData}`);
+                router.push(`/quiz/${quizData._id}/result?userEmail=${userData}`);
             }, 3000);
             return;
         }
@@ -169,6 +175,7 @@ const QuizAttemptPage = ({ quizData }) => {
             // console.log(err);
         }
         setUser(userData);
+        setLoading(false);
     };
 
 
@@ -210,7 +217,7 @@ const QuizAttemptPage = ({ quizData }) => {
                             type="submit"
                             className="bg-[#FF5F1F] bg-opacity-90 text-white py-2 rounded-lg hover:bg-opacity-100 transition shadow-md"
                         >
-                            Start Quiz
+                            {loading ? "Loading..." : "Start Quiz"}
                         </button>
                     </form>
                 </div>
@@ -288,8 +295,8 @@ const QuizAttemptPage = ({ quizData }) => {
                                                 name={`question-${question._id}`}
                                                 value={option}
                                                 checked={selectedAnswers[question._id] === option}
-                                                onChange={() =>
-                                                    handleAnswerChange(question._id, option)
+                                                onChange={(e) =>
+                                                    handleAnswerChange(e, question._id, option)
                                                 }
                                                 className="form-radio accent-[#FF5F1F]  "
                                             />
@@ -312,7 +319,7 @@ const QuizAttemptPage = ({ quizData }) => {
                                 onClick={handleSubmit}
                                 className="bg-green-500 text-white py-2 px-3 sm:px-6 rounded-lg hover:bg-green-600 transition shadow-md"
                             >
-                                Submit
+                                {loading ? "Submitting..." : "Submit"}
                             </button>
                         </div>
                     </div>

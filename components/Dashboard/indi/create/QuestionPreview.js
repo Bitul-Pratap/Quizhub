@@ -286,7 +286,7 @@ export function QuestionPreview({ question, index, isPreview = false, setGenerat
 
 
     return (
-        <div className="p-6 pt-4">
+        <div className="p-3 sm:p-6 pt-4">
             <div className="flex items-start justify-between mb-3">
                 <div className="flex flex-wrap items-center gap-2">
                     <h4 className="font-medium text-sm text-slate-600 dark:text-slate-400"> {isPreview ? "Q" : "Question"} {index + 1}</h4>
@@ -296,7 +296,7 @@ export function QuestionPreview({ question, index, isPreview = false, setGenerat
                 </div>
                 <div className="flex space-x-1">
                     <button
-                        className="px-3 h-9 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50"
+                        className="px-2 sm:px-3 h-9 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-50"
                         title="Edit"
                         type="button"
                         onClick={() => handleEdit()}
@@ -305,7 +305,7 @@ export function QuestionPreview({ question, index, isPreview = false, setGenerat
                         <Edit className="h-4 w-4" />
                     </button>
                     <button
-                        className="px-3 h-9 rounded-md text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        className="px-2 sm:px-3 h-9 rounded-md text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
                         onClick={() => isPreview ? removeQuestion(question.id) : handleRemoveQuestion(index)}
                         type="button"
                     >
@@ -437,7 +437,7 @@ export function QuestionPreview({ question, index, isPreview = false, setGenerat
                     <div className="flex space-x-2">
                         <button
                             type="button"
-                            className="flex items-center gap-2 px-3 h-9 rounded-md bg-orange-500 hover:bg-orange-600 text-white text-sm whitespace-nowrap font-medium"
+                            className="flex items-center gap-1 sm:gap-2 px-3 h-9 rounded-md bg-orange-500 hover:bg-orange-600 text-white text-sm whitespace-nowrap font-medium"
                             onClick={handleSave}
                         >
                             <Save className="h-4 w-4 mr-1" />
@@ -445,7 +445,7 @@ export function QuestionPreview({ question, index, isPreview = false, setGenerat
                         </button>
                         <button
                             type="button"
-                            className="flex items-center gap-2 px-3 h-9 rounded-md border border-slate-300 dark:border-slate-700 text-sm whitespace-nowrap font-medium"
+                            className="flex items-center gap-1 sm:gap-2 px-3 h-9 rounded-md border border-slate-300 dark:border-slate-700 text-sm whitespace-nowrap font-medium"
                             onClick={handleCancel}
                         >
                             <X className="h-4 w-4 mr-1" />

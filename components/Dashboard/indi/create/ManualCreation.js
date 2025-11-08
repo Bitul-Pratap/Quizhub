@@ -98,7 +98,7 @@ export function ManualCreation({ onAddQuestion }) {
     }
 
     return (
-        <div className="bg-white/60 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg p-6 shadow-sm  text-slate-900 dark:text-slate-100">
+        <div className="bg-white/60 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg p-4 sm:p-6 shadow-sm  text-slate-900 dark:text-slate-100">
             <h2 className="font-bold text-2xl mb-4">Create Question Manually</h2>
             <div className="mb-4">
                 <label htmlFor="question" className="block text-sm font-medium mb-2">Question</label>

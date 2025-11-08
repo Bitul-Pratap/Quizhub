@@ -19,7 +19,7 @@ export const authOptions = NextAuth({
                 const user = await User.findOne({email: email});
                 // console.log(user);
                 if(!user)
-                    throw new Error('Invalid credentials');
+                    throw new Error('User not found');
 
                 const passwordMatch = await bcrypt.compare(password, user.password);
                 // console.log(passwordMatch)
