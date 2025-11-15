@@ -45,6 +45,9 @@ export const metadata = {
     images: [`${process.env.NEXT_PUBLIC_URL}/image.png`],
     creator: "@your_twitter_handle"
   },
+  verification: {
+    google: 'c7ATtBzryKDMheQ-C6VpeSaYTmlMs0X67-VyVad3Ezs',
+  },
 
 };
 

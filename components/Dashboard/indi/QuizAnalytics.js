@@ -1,8 +1,9 @@
 'use client'
 import React, { useState, useEffect } from "react";
 import { useSession } from 'next-auth/react';
-import { fetchQuizInfo, getQuizAnalytics, getUserId } from '@/actions/useractions.js';
+import { fetchQuizInfo, getQuizAnalytics, getUserId, reEvalQuizAttempts } from '@/actions/useractions.js';
 import Loading from '@/components/Loading'
+import { span } from "motion/react-client";
 
 // Assuming you have an API to fetch quizzes and analytics
 const QuizAnalytics = () => {
@@ -14,6 +15,7 @@ const QuizAnalytics = () => {
   const [analytics, setAnalytics] = useState(null); // Store quiz analytics
   const [loading, setLoading] = useState(false); // Loading state
   const [refresh, setRefresh] = useState(false);
+  const [reEval, setReEval] = useState(false);
   const [showAll, setShowAll] = useState(false); // Toggle for leaderboard view
 
   useEffect(() => {
@@ -154,7 +156,27 @@ const QuizAnalytics = () => {
                               </button>
                             )}
                             <button onClick={() => { setRefresh(true); fetchAnalytics(selectedQuiz).finally(() => setRefresh(false)); }} className=" bg-[#FF5F1f] text-white text-sm px-4 py-2 rounded hover:bg-[#E5541C] transition">
-                              {refresh ? "Refreshing..." : "Refresh"}
+                              {refresh ? ( <div className="flex items-center gap-2"><span
+                                className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                              ></span> Refreshing</div>
+                              ) : "Refresh"}
+                            </button>
+                            <button
+                              onClick={() => {
+                                setReEval(true);
+                                reEvalQuizAttempts(selectedQuiz)
+                                  .then(() => fetchAnalytics(selectedQuiz))
+                                  .finally(() => setReEval(false));
+                              }}
+                              className=" bg-[#FF5F1f] text-white text-sm px-4 py-2 rounded hover:bg-[#E5541C] transition">
+                              {reEval ? ( <div className="flex items-center gap-2">
+                                  <span
+                                    className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"
+                                  ></span> Evaluating
+                                </div>
+                              ) : (
+                                "Re-Evaluate"
+                              )}
                             </button>
                             </div>
                           </>

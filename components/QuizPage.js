@@ -17,7 +17,7 @@ const QuizAttemptPage = ({ quizData }) => {
     
 
     const handleAnswerChange = (e, questionId, answer) => {
-        e.preventDefault();
+        // e.preventDefault();
         setSelectedAnswers((prev) => ({
             ...prev,
             [questionId]: answer,

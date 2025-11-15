@@ -170,3 +170,7 @@ body {
     @apply ring-slate-400 dark:ring-slate-600 ring-offset-neutral-100 dark:ring-offset-neutral-900;
   }
 }
+
+input[type="radio"]{
+  @apply accent-[#FF5F1F];
+}

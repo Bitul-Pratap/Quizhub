@@ -81,7 +81,7 @@ const Dashboard = () => {
     }
     return (
       <div className='w-full h-[90.7vh] max-h-full   px-4 flex items-center justify-center'>
-        <div className='w-full md:w-3/4 lg:w-1/2 2xl:max-w-[40%] rounded-lg flex flex-col p-6 sm:p-10 gap-4 md:gap-6 bg-white dark:bg-slate-700 shadow-md dark:shadow-slate-900 dark:border dark:border-slate-600'>
+        <div className='w-full md:w-3/4 lg:w-1/2 2xl:max-w-[40%] rounded-lg flex flex-col p-6 sm:p-10 gap-4 md:gap-6 bg-white dark:bg-slate-800 shadow-md dark:shadow-slate-950 dark:border dark:border-slate-600'>
           <h2 className='text-3xl'><span className='text-[#FF5F1F] font-semibold'>L</span>ogin to...</h2>
           <div className='flex flex-col sm:flex-row gap-2 sm:gap-4 w-full'>
             <button onClick={() => setSelectedDashboard('Individual')} className='px-6 py-2 w-full sm:w-1/2 bg-[#FF4c00] hover:bg-[#e64400] text-white rounded'>

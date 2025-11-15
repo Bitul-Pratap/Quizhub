@@ -149,7 +149,7 @@ export function ManualCreation({ onAddQuestion }) {
                                 }}
                             >
                                 {correctOption === index && (
-                                    <span className="w-4 h-3.5 bg-blue-500  rounded-full block" />
+                                    <span className="w-4 h-3.5 bg-[#FF5F1F]  rounded-full block" />
                                 )}
                             </span>
                         </label>

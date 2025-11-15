@@ -675,3 +675,61 @@ export const fetchOrg = async(orgId)=>{
     return {status:false, error: "Error finding Organization"};
   }
 }
+
+let reEvalStatus = false;
+export const reEvalQuizAttempts = async(quizId)=>{
+  if(reEvalStatus) return {status:false, message: "Re-evaluation already in progress"};
+  try {
+    reEvalStatus = true;
+    await connectDB();
+
+    const quiz = await Quiz.findOne({ quizId });
+    if (!quiz) {
+      reEvalStatus = false;
+      throw new Error('Quiz not found');
+    }
+    const attempts = quiz.attempts;
+    // console.log(attempts, quiz);
+    for (const attemptId of attempts) {
+      reEvaluteAttempt(attemptId, quiz);
+    }
+    reEvalStatus = false;
+    return { status: true, message: 'Re-evaluation started' };
+  } catch (error) {
+    console.error('Error during re-evaluation:', error);
+    reEvalStatus = false;
+    return { status: false, message: 'Error during re-evaluation' };
+  }
+}
+
+const reEvaluteAttempt = async (attemptId, quiz) => {
+  try {
+    const attempt = await QuizAttempt.findById(attemptId);
+    if (!attempt) {
+      throw new Error('Quiz attempt not found');
+    }
+    // console.log(attempt);
+    const questions = quiz.questions;
+    let newScore = 0;
+    let maxMarks = 0;
+    let correctQuestionsCount = 0;
+    for (const question of questions) {
+      const userAnswer = attempt.answers.get(question._id.toString());
+      const correctOption = question.options[question.correctOption];
+      maxMarks += question.marks;
+      if (userAnswer === correctOption) {
+        newScore += question.marks;
+        correctQuestionsCount++;
+      }
+    }
+    // Update the attempt with the new score and correct questions count
+    attempt.score = newScore;
+    attempt.correctQuestions = correctQuestionsCount;
+    // console.log("Re evaluated: " ,attempt);
+    await attempt.save();
+    console.log(`Successfully re-evaluated attempt ${attemptId}`);
+
+  } catch (error) {
+    console.error(`Error re-evaluating attempt ${attemptId}:`, error);
+  }
+}

@@ -9,6 +9,7 @@ import * as motion from 'motion/react-client';
 import { AnimatePresence } from 'motion/react';
 import Loading from '@/components/Loading';
 import { QuestionPreview } from './create/QuestionPreview';
+import Image from 'next/image';
 
 
 const YourQuizes = () => {
@@ -695,12 +696,12 @@ const YourQuizes = () => {
                             <input readOnly className='w-full border-[1.4px] border-gray-300 py-2 px-2 sm:px-4 rounded outline-none dark:bg-transparent dark:border-slate-700  focus:border-gray-500' type="text" name="" value={quizLink} />
                             <div className='flex gap-1 sm:gap-0'>
                                 <button className='flex items-center active:scale-90 transition-transform dark:invert rounded-full p-1 hover:bg-gray-200' onClick={handleCopyLink} title='Copy Link'>
-                                    <img src="copy.svg" alt="copy" />
+                                    <Image width={24} height={24} src="copy.svg" alt="copy" />
                                 </button>
 
                                 <Link href={quizLink} target='_blank' about='Link' className='flex items-center'>
                                     <button className='flex items-center active:scale-90 transition-transform dark:invert rounded-full p-1 hover:bg-gray-200' title='Open Link'>
-                                        <img src="open-link.svg" alt="link" />
+                                        <Image width={24} height={24} src="open-link.svg" alt="link" />
                                     </button>
                                 </Link>
                                 <button
@@ -719,7 +720,7 @@ const YourQuizes = () => {
                                         }
                                     }}
                                 >
-                                    <img src="share2.svg" alt="share" />
+                                    <Image width={24} height={24} src="share2.svg" alt="share" />
                                 </button>
                             </div>
                         </div>
@@ -793,14 +794,14 @@ const YourQuizes = () => {
                                         transition={{ duration: 0.4, delay: 0.1 * (index), type: 'spring', stiffness: 60 }}
                                         layout
                                         style={{ maxHeight: "min(50%, 275px)" }}
-                                        className='quiz-box min-w-[200px] max-w-[15%] min-h-[230px] bg-neutral-200 dark:bg-slate-700
+                                        className='quiz-box relative min-w-[200px] max-w-[15%] min-h-[230px] bg-neutral-200 dark:bg-slate-700
                                         dark:bg-opacity-55 dark:border-slate-700 text-neutral-800 dark:text-[#e3e3e3]  rounded-lg flex flex-col border-2 border-neutral-200 bg-opacity-60 dark:bg-opacity-100 cursor-pointer relative transition-shadow  ease-in-out duration-200  hover:shadow-[0_4px_6px_-1px_rgba(255,95,31,0.47)]'
                                     >
-                                        <div className="cover h-3/4 rounded-t-lg">
+                                        <div className="cover h-full rounded-t-lg">
                                             <img src={null} alt='Quiz cover' className="image w-full h-full border-b-2 border-transparent" />
                                         </div>
-                                        <div className="data text-sm h-1/4 rounded-b-lg flex flex-col dark:bg-slate-800 bg-neutral-50 p-2">
-                                            <div className="title flex items-center gap-2">
+                                        <div className="data text-sm absolute bottom-0 w-full rounded-b-lg flex flex-col dark:bg-slate-800 bg-neutral-50 p-2 gap-1">
+                                            <div className="title flex h-full items-center gap-2">
                                                 <span className='font-bold'>{quiz.title}</span>•<span>{quiz.subject}</span>
                                             </div>
                                             <div className="date text-xs text-gray-400 flex items-center gap-1">
