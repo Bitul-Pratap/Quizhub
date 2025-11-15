@@ -11,6 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 export const metadata = {
   title: "Quizhub",
   description: "An online quiz platform to create, share and manage quizzes.",
+  keywords: ["quiz", "online quiz", "quiz platform", "create quiz", "create quiz online", "education", "learning", "assessment", "ai quiz create"],
   icons: {
     icon: "/favicons/favicon.ico",                     // basic favicon
     shortcut: "/favicons/favicon-32x32.png",           // legacy shortcut icon
