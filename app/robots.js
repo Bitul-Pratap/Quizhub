@@ -3,8 +3,8 @@ export default function robots() {
         rules: [
             {
                 userAgent: "*",
-                allow: "/, /login/ /signup/ /signup/regindi/ /signup/regorg/",
-                disallow: ["/dashboard, /quiz"]
+                allow: ["/"],
+                disallow: ["/dashboard", "/quiz"]
             }
         ],
         sitemap: `${process.env.NEXT_PUBLIC_URL}/sitemap.xml`

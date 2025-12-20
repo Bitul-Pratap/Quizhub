@@ -5,11 +5,23 @@ import { Sun, Moon } from "lucide-react";
 import { useTheme } from 'next-themes'
 
 
+
 export default function ThemeToggle() {
   // const [theme, setTheme] = useState("light");
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [prefersDark, setPrefersDark] = useState(false);
+
+  function setThemeColor(color) {
+  let meta = document.querySelector('meta[name="theme-color"]');
+  if (!meta) {
+    meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    document.head.appendChild(meta);
+  }
+  meta.setAttribute('content', color);
+}
+
 
   useEffect(() => {
     setMounted(true);
@@ -44,6 +56,7 @@ export default function ThemeToggle() {
     const newTheme = (theme === "light") || (theme === "system")  ? "dark" : "light";
     setTheme(newTheme);
     setPrefersDark(newTheme==='dark'?true:false);
+    setThemeColor(newTheme === "dark" ? "#0f172acc" : "#ffffffcc");
     // localStorage.setItem("theme", newTheme);
 
     // if (newTheme === "dark") {

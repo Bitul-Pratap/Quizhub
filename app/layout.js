@@ -9,9 +9,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 export const metadata = {
-  title: "Quizhub",
-  description: "An online quiz platform to create, share and manage quizzes.",
-  keywords: ["quiz", "online quiz", "quiz platform", "create quiz", "create quiz online", "education", "learning", "assessment", "ai quiz create"],
+  title: {
+    default:"QuizHub – Online Quiz Creation & Assessment Platform",
+    template: "%s | QuizHub",
+  },
+  description: "QuizHub is an online quiz platform to create, share, and manage quizzes with AI-powered question generation, real-time analytics, and secure assessments.",
   icons: {
     icon: "/favicons/favicon.ico",                     // basic favicon
     shortcut: "/favicons/favicon-32x32.png",           // legacy shortcut icon
@@ -22,10 +24,14 @@ export const metadata = {
       { rel: "mask-icon", url: "/favicons/safari-pinned-tab.svg", color: "#111827" } // Safari pinned tab
     ]
   },
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffffcc" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f172acc" },
+  ],
   manifest: "/favicons/site.webmanifest",              // link to web manifest in /public
   // themeColor: "#0f172a",                      // used for mobile browser UI
   openGraph: {
-    title: "Quizhub",
+    title: "QuizHub – Online Quiz Platform",
     description: "An online quiz platform to create, share and manage quizzes.",
     url: `${process.env.NEXT_PUBLIC_URL}`,     // use your site URL
     images: [

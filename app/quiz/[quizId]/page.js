@@ -1,7 +1,19 @@
 'use server'
 import React from 'react'
 import QuizPage from '@/components/QuizPage';
-import { fetchQuizData } from '@/actions/useractions.js';
+import { fetchQuizData, fetchQuizInfoById } from '@/actions/useractions.js';
+
+export const generateMetadata = async ({ params }) => {
+    const quizId = params.quizId;
+    const quizData = await fetchQuizInfoById(quizId);
+    return {
+        title: quizData.title ? `${quizData.title} ` : 'QuizHub',
+        robots: {
+            index: false,
+            follow: false,
+        },
+    };
+};
 
 const QuizId = async ({ params }) => {
 

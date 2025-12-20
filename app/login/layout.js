@@ -1,4 +1,4 @@
-export default function DashboardLayout({ children }) {
+export default function LoginLayout({ children }) {
     return (
         <>
         {children}
@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }) {
     )
 }
 export const metadata = {
-  title: "Dashboard",
+  title: "Login",
   robots: {
     index: false,
     follow: false,

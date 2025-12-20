@@ -59,6 +59,19 @@ export const fetchQuizInfo = async (userId) => {
   return sanitizedQuizzes;
 }
 
+export const fetchQuizInfoById = async (quizId) => {
+  await connectDB();
+  let quiz = await Quiz.findOne({ quizId: quizId }).select('quizId title subject createdAt endDate creater').exec();
+  if (quiz) {
+    quiz = quiz.toObject({ flattenObjectIds: true });
+    // console.log(quiz);
+    return quiz;
+  }
+  else {
+    return { error: "Quiz is not present" };
+  }
+}
+
 export const fetchQuizData = async (quizId) => {
   await connectDB();
   let quiz = await Quiz.findOne({ quizId: quizId });

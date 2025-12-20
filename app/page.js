@@ -1,10 +1,24 @@
-"use client"
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import * as motion from "motion/react-client";
 import { ArrowRight, Sparkles } from "lucide-react";
 import MainLayout from "@/components/MainLayout";
+
+export const metadata = {
+  title: "QuizHub – Online Quiz Creation & Assessment ",
+  description: "QuizHub is an online quiz platform to create, share, and manage quizzes with AI-powered question generation, real-time analytics, and secure assessments.",
+  keywords: [
+    "online quiz platform",
+    "quiz creation tool",
+    "create quiz online",
+    "AI quiz generator",
+    "online assessment platform",
+    "education quizzes",
+    "quiz management system"
+  ],
+}
 
 export default function Home() {
   return (
@@ -21,6 +35,9 @@ export default function Home() {
             className="text-center max-w-4xl mx-auto flex flex-col items-center  gap-6"
           >
             <div className="inline-flex items-center rounded-full text-xs font-semibold transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-gradient-to-r from-orange-500 to-orange-600 text-white border-0 px-4 py-2" ><Sparkles className="w-4 h-4 mr-2" /> Introducing QuizHub v2.0 - Now with AI</div>
+            <h1 className="sr-only">
+              Online Quiz Creation & Assessment Platform
+            </h1>
             <h1 className="font-bold text-5xl lg:text-7xl text-[#FF5F1F] ">
               <span className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">Quizhub</span>
             </h1>
