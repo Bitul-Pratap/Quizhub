@@ -38,9 +38,9 @@ export default function Home() {
             <h1 className="sr-only">
               Online Quiz Creation & Assessment Platform
             </h1>
-            <h1 className="font-bold text-5xl lg:text-7xl text-[#FF5F1F] ">
+            <h2 className="font-bold text-5xl lg:text-7xl text-[#FF5F1F] ">
               <span className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">Quizhub</span>
-            </h1>
+            </h2>
             <p className="text-xl lg:text-2xl text-slate-600 dark:text-slate-400 ">Create, manage and analyse quizzes with the power of AI</p>
             <p className="text-lg text-slate-500 dark:text-slate-500 max-w-2xl mx-auto">Build engaging quizzes in seconds using AI generation, smart file imports, or traditional manual creation. Perfect for educators, trainers, and content creators.</p>
             <div className="mt-4 flex gap-3 justify-center">
@@ -92,11 +92,11 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
             className="flex flex-col gap-6 h-1/2 lg:full lg:w-3/5 2xl:w-2/5 mt-10 sm:pl-10">
-            <h1 className="font-bold text-4xl md:text-5xl relative rounded-sm w-fit
+            <h2 className="font-bold text-4xl md:text-5xl relative rounded-sm w-fit
               after:rounded-b-sm after:content-[' '] after:w-full after:absolute after:left-0 after:bottom-[-1px] after:h-[3px] after:bg-gradient-to-r after:from-[#FF5F1F] after:to-[#ffaf8f]
             ">
               <span className="text-[#FF5F1F]">F</span>or the institute
-            </h1>
+            </h2>
             <p className="md:text-lg">Manage quizzes for large teams or groups.
               <br />
               Generate aggregated analytics to understand group performance and identify areas for improvement.</p>
@@ -119,9 +119,9 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
             className="flex flex-col gap-6 h-1/2 lg:h-full lg:w-3/5 2xl:w-2/5 mt-10 sm:pl-10">
-            <h1 className="font-bold text-4xl md:text-5xl rounded-sm w-fit relative
+            <h2 className="font-bold text-4xl md:text-5xl rounded-sm w-fit relative
               after:rounded-b-sm after:content-[' '] after:w-full after:absolute after:left-0 after:bottom-[-1px] after:h-[3px] after:bg-gradient-to-r after:to-[#FF5F1F] after:from-[#ffaf8f]
-            ">For the individual</h1>
+            ">For the individual</h2>
             <p className="md:text-lg dark:text-[#e3e3e3]">Personalize quizzes for self-learning, practice, or small-scale projects.
               <br />
               Track individual performance through detailed analytics.
