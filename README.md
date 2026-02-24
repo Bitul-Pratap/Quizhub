@@ -35,4 +35,5 @@
 ---
 
 **Deployed on Render**
-Live preview - https://quizhub-9b1k.onrender.com
+Live preview v1 - [https://quizhub-9b1k.onrender.com](https://quizhub-9b1k.onrender.com/)
+Live preview v2 - [https://quizhub-9b1k.onrender.com](https://quizhub-v2.vercel.app/)
